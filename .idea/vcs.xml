@@ -4,6 +4,8 @@
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../createdata_env/create_data" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../qa_platform" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../qa_platform_env/qa_platform" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../qa_platform_fe" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../qa_platform_fe_env/qa_platform_fe" vcs="Git" />
   </component>
 </project>

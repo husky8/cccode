@@ -1,21 +1,41 @@
+# coding=utf-8
 import sys
 import os
-sys.path.append("..")
-sys.path.append(os.getcwd())
-from invest.EXCEL封装 import GetInfoFromExcel
-from invest.EXCEL封装 import WriteDataToExcel
-from invest.EXCEL封装 import CreateNewWorkbook
+import time
+
+# print(sys.argv[0])
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curPath)[0]
+sys.path.append(rootPath)
+# sys.path.append("..")
+# sys.path.append(os.getcwd())
+# print(os.getcwd())
+
+from invest.useExcel import GetInfoFromExcel
+from invest.useExcel import WriteDataToExcel
+from invest.useExcel import CreateNewWorkbook
+from invest.useExcel import ModifyExcel
 from invest.getRaelValue import getTHHS300A
 from invest.getRaelValue import getTHZZ500C
+from tools.getSomething import getDateProperty
 from invest.阿里机器人接口 import 发送消息
 
+today = time.strftime('%Y%m%d', time.localtime(time.time()))
+dateProperty = getDateProperty(today)
+if dateProperty["worknm"] != "工作日" or  int(dateProperty["week_1"]) >= 6:
+    print("当天不开盘")
+    exit(0)
+
+configFilePath =os.getcwd()+"/"+"配置.xlsx"
 HS300REALVALUE=getTHHS300A()
 ZZ500REALVALUE=getTHZZ500C()
 print(HS300REALVALUE)
 print(ZZ500REALVALUE)
+# ModifyExcel().modifyExcel("配置.xlsx", "F1", HS300REALVALUE, "hs300")
+# ModifyExcel().modifyExcel("配置.xlsx", "F1", ZZ500REALVALUE, "zz500")
 robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=c1c7e7ee961fd1049876fe87d98cdbf6ba106cfa3a5f616333e33cbfc780db98"
 
-datass=(GetInfoFromExcel().getInfoFromExcel("配置.xlsx",sheetName="hs300"))
+datass=(GetInfoFromExcel().getInfoFromExcel(configFilePath,sheetName="hs300"))
 def calculate(datass,realValue):
     keys=(datass.pop(0)) #取出第一行为字段索引
     编号index = keys.index('编号')
@@ -31,12 +51,21 @@ def calculate(datass,realValue):
     msgList=[]
 
     for datas in datass:
-
         # 盈利计算
-        # if datas[状态index] == "持有" and realValue > datas[购单价index]*(1+datas[目标index]):
-        if True:
+        for i in range(len(datas)):
+            try:datas[i]=float(datas[i])
+            except:pass
+        # print(datas)
+        # print(datas[目标index])
+        # exit(0)
+        # print(type(realValue))
+        # print(type(datas[购单价index]))
+        # print(type(datas[目标index]))
 
-            msg = "编号为【{编号}】的【{份数}】份基金目前收益率【{当前收益率:.2f}%】超过计划收益率【{目标}%】可售出".format(
+        if datas[状态index] == "持有" and realValue > datas[购单价index]*(1+float(datas[目标index])):
+        # if True:
+
+            msg = "编号为【{编号}】的【{份数}】份基金目前收益率【{当前收益率:.2f}%】超过计划收益率【{目标:.2f}%】可售出".format(
                 编号=datas[编号index],
                 份数=datas[份数index],
                 当前收益率=(realValue/datas[购单价index]-1)*100,
@@ -71,17 +100,15 @@ def sendMsg(msgList):
 
 if __name__ == '__main__':
 
-    datass = (GetInfoFromExcel().getInfoFromExcel("配置.xlsx", sheetName="hs300"))
+    datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass,HS300REALVALUE)
+    # print(msgList)
     sendMsg(msgList)
 
-    datass = (GetInfoFromExcel().getInfoFromExcel("配置.xlsx", sheetName="zz500"))
+    datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"))
     msgList = calculate(datass, ZZ500REALVALUE)
     sendMsg(msgList)
-
-# CreateNewWorkbook().createNewWorkbook("结果.xlsx",["发帖人名称","推送次数","总发文量",
-#             "总阅读量","总点赞数","头条总阅读量","头条总点赞数","头条最高阅读","头条最高点赞"]) #写首行
-# WriteDataToExcel().writeDataToExcel("结果.xlsx",finResult) #写正文
+    # print(msgList)
 
 
 
