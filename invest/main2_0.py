@@ -2,6 +2,9 @@
 import sys
 import os
 import time
+import sys
+import importlib,sys
+importlib.reload(sys)
 
 # print(sys.argv[0])
 curPath = os.path.abspath(os.path.dirname(__file__))
@@ -38,51 +41,58 @@ robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=c1c7e7ee961fd10498
 datass=(GetInfoFromExcel().getInfoFromExcel(configFilePath,sheetName="hs300"))
 def calculate(datass,realValue):
     keys=(datass.pop(0)) #取出第一行为字段索引
-    编号index = keys.index('编号')
+    numberIndex = keys.index('编号')
     成本index = keys.index('成本')
-    份数index = keys.index('份数')
-    购单价index = keys.index('购单价')
-    目标index = keys.index('目标')
-    售单价index = keys.index('售单价')
-    盈利index = keys.index('盈利')
-    状态index = keys.index('状态')
+    muchIndex = keys.index('份数')
+    buyPriceindex = keys.index('购单价')
+    targetIndex = keys.index('目标')
+    # 售单价index = keys.index('售单价')
+    盈利index = 7
+    statusIndex = keys.index('状态')
     日志index = keys.index('日志')
 
     msgList=[]
-
+    saleCount = 0
     for datas in datass:
         # 盈利计算
         for i in range(len(datas)):
             try:datas[i]=float(datas[i])
             except:pass
         # print(datas)
-        # print(datas[目标index])
+        # print(datas[targetIndex])
         # exit(0)
         # print(type(realValue))
-        # print(type(datas[购单价index]))
-        # print(type(datas[目标index]))
+        # print(type(datas[buyPriceindex]))
+        # print(type(datas[targetIndex]))
+        if datas[statusIndex] == "持有":
+            # print("正在计算【{}】【{}】份购买价格【{}】目前价格【{}】目前收益率【{:.2f}%】目标收益率【{:.2f}%】".format(datas[numberIndex],datas[muchIndex],datas[buyPriceindex],realValue,(realValue/datas[buyPriceindex]-1)*100,datas[targetIndex]*100))
+            pass
 
-        if datas[状态index] == "持有" and realValue > datas[购单价index]*(1+float(datas[目标index])):
+        if datas[statusIndex] == "持有" and realValue > datas[buyPriceindex]*(1+float(datas[targetIndex])):
         # if True:
 
             msg = "编号为【{编号}】的【{份数}】份基金目前收益率【{当前收益率:.2f}%】超过计划收益率【{目标:.2f}%】可售出".format(
-                编号=datas[编号index],
-                份数=datas[份数index],
-                当前收益率=(realValue/datas[购单价index]-1)*100,
-                目标=datas[目标index]*100,
+                编号=datas[numberIndex],
+                份数=datas[muchIndex],
+                当前收益率=(realValue/datas[buyPriceindex]-1)*100,
+                目标=datas[targetIndex]*100,
             )
+            saleCount=saleCount+datas[muchIndex]
             # print(msg)
             msgList.append(msg)
             continue
+    if saleCount != 0:
+        msgList.append("合计应出售【{合计出售份数:.2f}】".format(合计出售份数=saleCount))
+
 
         # 合并计算
-        if datas[状态index] == "持有" and realValue < datas[购单价index]*(1-1.5*datas[目标index]):
+        if datas[statusIndex] == "持有" and realValue < datas[buyPriceindex]*(1-1.5*datas[targetIndex]):
         # if True:
             msg = "编号为【{编号}】的【{份数}】份基金目前收益率【{当前收益率:.2f}%】请考虑合并".format(
-                编号=datas[编号index],
-                份数=datas[份数index],
-                当前收益率=(realValue / datas[购单价index] - 1) * 100,
-                目标=datas[目标index] * 100,
+                编号=datas[numberIndex],
+                份数=datas[muchIndex],
+                当前收益率=(realValue / datas[buyPriceindex] - 1) * 100,
+                目标=datas[targetIndex] * 100,
             )
             # print(msg)
             msgList.append(msg)
@@ -109,7 +119,6 @@ if __name__ == '__main__':
     msgList = calculate(datass, ZZ500REALVALUE)
     sendMsg(msgList)
     # print(msgList)
-
 
 
 
