@@ -112,13 +112,15 @@ if __name__ == '__main__':
 
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass,HS300REALVALUE)
-    # print(msgList)
     sendMsg(msgList)
+    # for  i in msgList:
+    #     print(i)
 
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"))
     msgList = calculate(datass, ZZ500REALVALUE)
     sendMsg(msgList)
-    # print(msgList)
+    # for  i in msgList:
+    #     print(i)
 
 
 
