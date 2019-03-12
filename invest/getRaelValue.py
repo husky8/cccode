@@ -23,3 +23,6 @@ if __name__ == '__main__':
     zz500=getTHZZ500C()
     print("hs300 {}".format(hs300))
     print("zz500 {}".format(zz500))
+    1.1272
+    0.9535
+

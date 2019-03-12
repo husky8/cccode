@@ -5,6 +5,7 @@ import time
 import sys
 import importlib,sys
 importlib.reload(sys)
+import configparser
 
 # print(sys.argv[0])
 curPath = os.path.abspath(os.path.dirname(__file__))
@@ -103,10 +104,13 @@ def sendMsg(msgList):
     :param msgList:
     :return: 解析消息列表 并发送钉钉消息
     """
+    f = open("不同步.log")
     finMsg = ""
     for msg in msgList:
         finMsg=finMsg+msg+"\n"
-    发送消息().发送普通文本消息(finMsg, apiurl=robotUrl)
+    发送消息().发送普通文本消息(finMsg, apiurl=robotUrl,
+                    atList=f.readlines()
+                    )
 
 if __name__ == '__main__':
 
