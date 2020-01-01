@@ -150,9 +150,9 @@ class ModifyExcel():
         ws[Coordinate]=newValue
         wb.save(filePath)
 if __name__ == '__main__':
-    # CreateNewWorkbook().createNewWorkbook("11.xlsx",[1,2,3,4,5])
-    ModifyExcel().modifyExcel("公式.xlsx","F1",1.1112,"hs300")
-    ModifyExcel().modifyExcel("公式.xlsx", "F1", 1.1113,"zz500")
+    CreateNewWorkbook().createNewWorkbook("11.xlsx",[1,2,3,4,5])
+    # ModifyExcel().modifyExcel("公式.xlsx","F1",1.1112,"hs300")
+    # ModifyExcel().modifyExcel("公式.xlsx", "F1", 1.1113,"zz500")
     # s = GetInfoFromExcel().getInfoFromExcel("公式.xlsx")
     # print(s)
     # excel_Result = openpyxl.load_workbook("公式.xlsx", data_only=True)

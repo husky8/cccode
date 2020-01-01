@@ -36,5 +36,5 @@ def getDateProperty(date):
     return eval(r.text)["result"]
 if __name__ == '__main__':
 
-    s = getDateProperty("20190203")
-    print(s["worknm"])
+    s = getDateProperty("20190624")
+    print(s)

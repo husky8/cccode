@@ -13,7 +13,7 @@ class 发送消息():
         }
         str_data = {
             "msgtype": "text",
-            "text": {"content": msg},
+            "text": {"content": msg+"."},
             "at": {
                 "atMobiles": atList,
                 "isAtAll": isAtAll
@@ -64,13 +64,13 @@ class 发送消息():
 
 if __name__ == '__main__':
     # url = 'https://oapi.dingtalk.com/robot/send?access_token=0c57dacf315f6b76a7fa869819820fa108b9eb4111920fb353b2dd22d2d6efd4'
-    url="https://oapi.dingtalk.com/robot/send?access_token=5985b0b1d4f41624575d46c350fd8413d5ce32106889446fef74735e06e75b4b"
-    发送消息().发送普通文本消息("小伙伴们，本周六(12.29)中午呷哺呷哺，约的吱一声",url,isAtAll=True)
+    url="https://oapi.dingtalk.com/robot/send?access_token=8f54341587be01b5e932f594b547247d307952ff866d62b870f2025044b189d0"
+    s=发送消息().发送普通文本消息("测试.",url,isAtAll=True)
     # s = 发送消息().发送链接文本消息(url, "这回对了",
     #                     "详情请点击",
     #                     picUrl="http://img0.imgtn.bdimg.com/it/u=3348813714,2010737230&fm=26&gp=0.jpg",
     #                     messageUrl="http://172.16.241.28:8000/a/"
     #                     )
     # s = 发送消息().发送MarkDown消息(url, "@所有人", "详情请点击")
-    # print(s)
+    print(s)
 
