@@ -1,4 +1,0 @@
-
-
-def quickSort(tlist):
-    quickSortH()
