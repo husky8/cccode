@@ -8,7 +8,7 @@ import importlib
 
 importlib.reload(sys)
 import configparser
-sys.path.append(r"C:\Users\Administrator\cccode")
+sys.path.append(r"C:\Users\Administrator\cccode\cccode")
 # print(sys.argv[0])
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 curPath = os.path.abspath(os.path.dirname(__file__))
