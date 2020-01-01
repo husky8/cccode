@@ -1,14 +1,14 @@
 # coding=utf-8
 import sys
+import os
+import time
 import datetime
 import io
-import sys
-import os
+import importlib
 
-sys.path.append(r"C:\Users\Administrator\cccode")
-import time
+importlib.reload(sys)
 import configparser
-
+sys.path.append(r"C:\Users\Administrator\cccode")
 # print(sys.argv[0])
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 curPath = os.path.abspath(os.path.dirname(__file__))
