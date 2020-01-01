@@ -1,5 +1,5 @@
 import traceback
-from tools import con
+from tools import config
 import sxtwl
 import os
 import re
@@ -66,13 +66,13 @@ def get_day_property(date=""):
         lunar = sxtwl.Lunar()  # 实例化日历库d
         day = lunar.getDayBySolar(y, m, d)
         if day.Lleap:
-            r_lunar = "闰{}月{}".format(con.YMC[day.Lmc], con.RMC[day.Ldi])
+            r_lunar = "闰{}月{}".format(config.YMC[day.Lmc], config.RMC[day.Ldi])
         else:
-            r_lunar = "闰{}月{}".format(con.YMC[day.Lmc], con.RMC[day.Ldi])
+            r_lunar = "闰{}月{}".format(config.YMC[day.Lmc], config.RMC[day.Ldi])
 
-        if date in con.WORK_DAY:
+        if date in config.WORK_DAY:
             return {"error_code": "", "error_msg": "", "data": {"Solar": date, "workday": True, "lunar": r_lunar}}
-        if date in con.FREE_DAY:
+        if date in config.FREE_DAY:
             return {"error_code": "", "error_msg": "", "data": {"Solar": date, "workday": False, "lunar": r_lunar}}
         weekday = datetime.datetime(y, m, d).weekday()
         if 0 <= weekday <= 4:
