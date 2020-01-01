@@ -1,12 +1,12 @@
 # coding=utf-8
 import sys
-import os
-import time
 import datetime
 import io
-import importlib
+import sys
+import os
 
-importlib.reload(sys)
+sys.path.append(r"C:\Users\Administrator\cccode")
+import time
 import configparser
 
 # print(sys.argv[0])
