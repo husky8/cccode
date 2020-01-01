@@ -25,6 +25,7 @@ from invest.阿里机器人接口 import 发送消息
 DEBUG = False
 
 today = time.strftime('%Y%m%d', time.localtime(time.time()))
+
 dateProperty = getDateProperty(today)
 if dateProperty["worknm"] != "工作日" or int(dateProperty["week_1"]) >= 6:
     print("当天不开盘")
