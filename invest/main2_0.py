@@ -22,7 +22,7 @@ from invest.getRaelValue import getTHZZ500C
 from tools.getSomething import getDateProperty
 from invest.阿里机器人接口 import 发送消息
 
-DEBUG = True
+DEBUG = False
 
 today = time.strftime('%Y%m%d', time.localtime(time.time()))
 
