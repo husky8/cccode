@@ -96,11 +96,11 @@ if __name__ == '__main__':
     zz500=getTHZZ500C()
     print(hs300)
     print(zz500)
-    s = getStock(stockid = "399006")
+    # s = getStock(stockid = "399006")
     # s = getNewStock("bond")
     # s = getNewStock("ipo")
     # s= getIndex("399006")
-    print(s)
+    # print(s)
     # print(s["info"]["c"])
     1.4161
     1.0327
