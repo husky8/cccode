@@ -5,9 +5,11 @@ import time
 import datetime
 import io
 import importlib
+import uuid
 
 importlib.reload(sys)
 import configparser
+
 sys.path.append(r"C:\Users\Administrator\cccode\cccode")
 # print(sys.argv[0])
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -39,8 +41,17 @@ if not dateProperty["data"]["workday"] or 5 <= int(dateProperty["data"]["weekday
     exit(0)
 
 DEBUG = False
+mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
+mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
+if mac == "ac:de:48:00:11:22":
+    DEBUG = True
+
+# DEBUG=True
+
 RETRYTIMES = 0
-HAVEINGLIST = ["先导转债","明阳转债","木森转债","振德转债","建工转债","日月转债","深南转债","麦米转债","汽模转2","唐人转债","璞泰转债","希望转债","百川转债"]
+HAVEINGLIST = {"123036": "先导转债", "113029": "明阳转债", "128084": "木森转债", "113555": "振德转债", "110064": "建工转债",
+               "113558": "日月转债", "128088": "深南转债", "128089": "麦米转债", "128090": "汽模转2", "128092": "唐人转债",
+               "113562": "璞泰转债", "127015": "希望转债", "128093": "百川转债"}
 
 
 def sendMsg(msg, apiurl="default"):
@@ -81,12 +92,12 @@ def checkBond():
             # print(todayDiff_2)
             checkRes.append(bond["SNAME"])
 
-        if bond["SNAME"] in HAVEINGLIST and bond["LISTDATE"] != "-":
+        if bond["BONDCODE"] in HAVEINGLIST.keys() and bond["LISTDATE"] != "-":
             saleDay = datetime.datetime.strptime(bond["LISTDATE"][:10], '%Y-%m-%d').date()
             todayDate = datetime.datetime.strptime(today, '%Y-%m-%d').date()
             # print(today,saleDay)
             if todayDate <= saleDay:
-                saleRes.append({"name": bond["SNAME"], "saleDay": saleDay})
+                saleRes.append({"code": bond["BONDCODE"], "name": bond["SNAME"], "saleDay": saleDay})
 
     if applyRes != []:
         applyRes = "、".join(applyRes)
@@ -114,9 +125,11 @@ def checkBond():
     if saleRes != []:
         for i in saleRes:
             if DEBUG:
-                print("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(i["saleDay"])!=today else "已于【今日】"))
+                print("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
+                    i["saleDay"]) != today else "已于【今日】"))
             else:
-                sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(i["saleDay"])!=today else "已于【今日】"))
+                sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
+                    i["saleDay"]) != today else "已于【今日】"))
                 sendMsg("你持仓的【{}】，将于【{}】上市交易，请注意择机出售".format(i["name"], i["saleDay"]), apiurl=ZZLRURL)
 
 
