@@ -40,7 +40,7 @@ if not dateProperty["data"]["workday"] or 5 <= int(dateProperty["data"]["weekday
 
 DEBUG = False
 RETRYTIMES = 0
-HAVEINGLIST = ["先导转债","明阳转债","木森转债","振德转债","建工转债","日月转债","深南转债","麦米转债","汽模转2","唐人转债","璞泰转债","希望转债","百川转债"]
+HAVEINGLIST = ["先导转债","明阳转债","木森转债","振德转债","建工转债","日月转债","深南转债","麦米转债","汽模转2","唐人转债","璞泰转债","希望转债","百川转债","乐普转债"]
 
 
 def sendMsg(msg, apiurl="default"):
