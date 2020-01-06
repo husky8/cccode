@@ -12,6 +12,7 @@ import configparser
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(rootPath)
+import uuid
 # sys.path.append("..")
 # sys.path.append(os.getcwd())
 # print(os.getcwd())
@@ -22,7 +23,13 @@ from invest.getRaelValue import getTHZZ500C
 from tools.getSomething import getDateProperty
 from invest.阿里机器人接口 import 发送消息
 
-DEBUG = False
+DEBUG= False
+mac=uuid.UUID(int = uuid.getnode()).hex[-12:]
+mac =  ":".join([mac[e:e+2] for e in range(0,11,2)])
+if mac == "ac:de:48:00:11:22":
+    DEBUG = True
+
+# DEBUG=True
 
 today = time.strftime('%Y%m%d', time.localtime(time.time()))
 
@@ -71,10 +78,10 @@ def calculate(datass, realValue):
         # print(type(datas[buyPriceindex]))
         # print(type(datas[targetIndex]))
         if datas[statusIndex] == "持有" and DEBUG:
-            # print("正在计算【{}】【{}】份购买价格【{}】目前价格【{}】目前收益率【{:.2f}%】目标收益率【{:.2f}%】剩余【{:.2f}%】".format(
-            #     datas[numberIndex], datas[muchIndex], datas[buyPriceindex], realValue,
-            #     (realValue / datas[buyPriceindex] - 1) * 100,
-            #     datas[targetIndex] * 100, (datas[targetIndex] - (realValue / datas[buyPriceindex] - 1)) * 100))
+            print("正在计算【{}】【{}】份购买价格【{}】目前价格【{}】目前收益率【{:.2f}%】目标收益率【{:.2f}%】剩余【{:.2f}%】".format(
+                datas[numberIndex], datas[muchIndex], datas[buyPriceindex], realValue,
+                (realValue / datas[buyPriceindex] - 1) * 100,
+                datas[targetIndex] * 100, (datas[targetIndex] - (realValue / datas[buyPriceindex] - 1)) * 100))
             pass
 
         if datas[statusIndex] == "持有" and realValue > datas[buyPriceindex] * (1 + float(datas[targetIndex])):
