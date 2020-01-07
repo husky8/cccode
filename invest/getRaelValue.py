@@ -46,7 +46,7 @@ def getNewStock(stocktype="bond", num=50):
     try:
         # stockdic = {"bond": "KZZ_LB2.0", "ipo": "XGSG_LB"}
         if stocktype == "ipo":
-            url = "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=XGSG_LB&token=70f12f2f4f091e459a279469fe49eca5&st=STARTDATE&sr=1&p=-1&ps={num}".format(num=num)
+            url = "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=XGSG_LB&token=70f12f2f4f091e459a279469fe49eca5&st=purchasedate,securitycode&sr=-1&p=1&ps={num}".format(num=num)
         if stocktype == "bond":
             url =  "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=KZZ_LB2.0&token=70f12f2f4f091e459a279469fe49eca5&st=STARTDATE&sr=-1&p=-1&ps={num}".format(num=num)
         r = requests.get(url)
@@ -98,9 +98,9 @@ if __name__ == '__main__':
     print(zz500)
     # s = getStock(stockid = "399006")
     # s = getNewStock("bond")
-    # s = getNewStock("ipo")
+    s = getNewStock("ipo")
     # s= getIndex("399006")
-    # print(s)
+    print(s)
     # print(s["info"]["c"])
     1.4436
     1.0738

@@ -49,9 +49,9 @@ if mac == "ac:de:48:00:11:22":
 # DEBUG=True
 
 RETRYTIMES = 0
-HAVEINGLIST = {"123036": "先导转债", "113029": "明阳转债", "128084": "木森转债", "113555": "振德转债", "110064": "建工转债",
-               "113558": "日月转债", "128088": "深南转债", "128089": "麦米转债", "128090": "汽模转2", "128092": "唐人转债",
-               "113562": "璞泰转债", "127015": "希望转债", "128093": "百川转债"}
+HAVEINGLIST = {"123036": "先导转债", "128084": "木森转债", "113555": "振德转债", "110064": "建工转债", "113558": "日月转债",
+               "128088": "深南转债", "128089": "麦米转债", "128090": "汽模转2", "128092": "唐人转债", "113562": "璞泰转债",
+               "127015": "希望转债", "128093": "百川转债"}
 
 
 def sendMsg(msg, apiurl="default"):
@@ -67,7 +67,7 @@ def sendMsg(msg, apiurl="default"):
 
 def checkBond():
     ZZLRURL = "https://oapi.dingtalk.com/robot/send?access_token=dce87ebd6cab4755e26a2ad2e33e6eeb7b02e5b92f9ce8f130cdf58093049ec0"
-    # today = "2019-11-20"
+    # today = "2019-01-06"
     bondlist = getNewStock("bond")
     # print(bondlist)
     # print(todayDiff_2)
@@ -134,8 +134,8 @@ def checkBond():
 
 
 def checkIpo():
-    # today = "2019-06-18"
-
+    # today = "2020-01-06"
+    # todayDiff_2 = "2020-01-06"
     ipolist = getNewStock("ipo")
     # print(ipolist)
     if type(ipolist) != type([1, 2, 3]):
@@ -152,6 +152,8 @@ def checkIpo():
     SHFLAG = True
     for ipo in ipolist:
         # print(ipo)
+        # print(ipo["purchasedate"])
+        # print(today in ipo["purchasedate"])
         if today in ipo["purchasedate"]:
 
             malltype = ""
@@ -192,5 +194,5 @@ def checkIpo():
 
 
 if __name__ == '__main__':
-    checkBond()
+    # checkBond()
     checkIpo()
