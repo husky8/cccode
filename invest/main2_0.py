@@ -193,5 +193,6 @@ if __name__ == '__main__':
     if int(dateProperty["week_1"]) % 2 == 0:
         gettargetimg()
         time.sleep(2)
-        发送消息().发送整体跳转消息(robotUrl, "未出售基金收益图示.", "https://cccloud.xyz/static/bondscatter.png", singleTitle="点击跳转到网页",
+        发送消息().发送整体跳转消息(robotUrl, "未出售基金收益图示.", "https://cccloud.xyz/static/bondscatter.png",
+                        singleTitle="{} bond target states".format(today),
                         singleURL="https://cccloud.xyz/static/bondscatter.png")
