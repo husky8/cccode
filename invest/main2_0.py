@@ -25,7 +25,6 @@ from invest.阿里机器人接口 import 发送消息
 from matplotlib import pyplot as plt
 import pandas as pd
 
-
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
 mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
@@ -114,6 +113,7 @@ def calculate(datass, realValue):
             msgList.append(msg)
     return msgList
 
+
 def getchartdatas(datass, realValue):
     keys = (datass.pop(0))  # 取出第一行为字段索引
     numberIndex = keys.index('编号')
@@ -131,11 +131,13 @@ def getchartdatas(datass, realValue):
             except:
                 pass
         if datas[statusIndex] == "持有":
-            temp=  realValue / datas[buyPriceindex]-1 - datas[targetIndex]
-            targetchartdatas.append({"date":datas[numberIndex][-4:],"value":temp,"rank":datas[成本index]})
+            temp = realValue / datas[buyPriceindex] - 1 - datas[targetIndex]
+            targetchartdatas.append({"date": datas[numberIndex][-4:], "value": temp, "rank": datas[成本index]})
     return targetchartdatas
+
+
 def gettargetimg():
-    imgpath = "bondscatter.png" if DEBUG else  r"C:\Users\Administrator\cccloud\static\bondscatter.png"
+    imgpath = "bondscatter.png" if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter.png"
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
                                     HS300REALVALUE)
@@ -144,19 +146,21 @@ def gettargetimg():
                                     ZZ500REALVALUE)
     ZZ500pd = pd.DataFrame(ZZ500chartdatas)
     plt.figure(figsize=(60, 40))
+    plt.rcParams['savefig.dpi'] = 300
     fig, ax = plt.subplots()
     ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c="#2786ba", marker='.')
     ax.scatter(ZZ500pd["date"], ZZ500pd["value"], linewidths=ZZ500pd["rank"] / 75, c="#40bfd2", marker='.')
     ax.legend(["HS300", "ZZ500"])
-    ax.text(0.5, 1, "{} bond target states".format(today), transform=ax.transAxes, color='#333333', size=20, ha='center', weight=100)
+    ax.text(0.5, 1, "{} bond target states".format(today), transform=ax.transAxes, color='#333333', size=20,
+            ha='center', weight=100)
     ax.grid(which='major', axis='y', linestyle='-')
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
 
-
     plt.xticks([])
     plt.savefig(imgpath)
+
 
 def sendMsg(msgList):
     """
@@ -168,6 +172,7 @@ def sendMsg(msgList):
     for msg in msgList:
         finMsg = finMsg + msg + "\n"
     发送消息().发送普通文本消息(finMsg, apiurl=robotUrl, atList=f.readlines())
+
 
 if __name__ == '__main__':
 
@@ -185,9 +190,8 @@ if __name__ == '__main__':
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
 
-    robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=fa20378970ff8f99c854bf4334e1d46e9a33a78bbde78dbfb8f870a85fc876b6"
-
-    gettargetimg()
-    time.sleep(2)
-    发送消息().发送整体跳转消息(robotUrl,"未出售基金收益图示.","http://cccloud.xyz/static/bondchart.png")
-
+    if int(dateProperty["week_1"]) % 2 == 0:
+        gettargetimg()
+        time.sleep(2)
+        发送消息().发送整体跳转消息(robotUrl, "未出售基金收益图示.", "https://cccloud.xyz/static/bondscatter.png", singleTitle="点击跳转到网页",
+                        singleURL="https://cccloud.xyz/static/bondscatter.png")
