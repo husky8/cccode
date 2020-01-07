@@ -22,6 +22,9 @@ from invest.getRaelValue import getTHHS300A
 from invest.getRaelValue import getTHZZ500C
 from tools.getSomething import getDateProperty
 from invest.阿里机器人接口 import 发送消息
+from matplotlib import pyplot as plt
+import pandas as pd
+import json
 
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
@@ -64,7 +67,6 @@ def calculate(datass, realValue):
 
     msgList = []
     saleCount = 0
-    targetchart = {}
     for datas in datass:
 
         # 盈利计算
@@ -84,12 +86,6 @@ def calculate(datass, realValue):
                 datas[numberIndex], datas[muchIndex], datas[buyPriceindex], realValue,
                 (realValue / datas[buyPriceindex] - 1) * 100,
                 datas[targetIndex] * 100, (datas[targetIndex] - (realValue / datas[buyPriceindex] - 1)) * 100))
-        if datas[statusIndex] == "持有":
-            temp= str(math.floor((datas[targetIndex] - (realValue / datas[buyPriceindex] - 1)) * 100))
-            try :
-                targetchart[temp] = targetchart[temp]+1
-            except:
-                targetchart[temp] = 1
 
         if datas[statusIndex] == "持有" and realValue > datas[buyPriceindex] * (1 + float(datas[targetIndex])):
             msg = "编号为【{编号}】的【{份数}】份基金目前收益率【{当前收益率:.2f}%】超过计划收益率【{目标:.2f}%】可售出".format(
@@ -116,9 +112,50 @@ def calculate(datass, realValue):
             )
             # print(msg)
             msgList.append(msg)
-    print(targetchart)
     return msgList
 
+def getchartdatas(datass, realValue):
+    keys = (datass.pop(0))  # 取出第一行为字段索引
+    numberIndex = keys.index('编号')
+    成本index = keys.index('成本')
+    buyPriceindex = keys.index('购单价')
+    targetIndex = keys.index('目标')
+    statusIndex = keys.index('状态')
+    targetchartdatas = []
+    for datas in datass:
+
+        # 盈利计算
+        for i in range(len(datas)):
+            try:
+                datas[i] = float(datas[i])
+            except:
+                pass
+        if datas[statusIndex] == "持有":
+            temp=  realValue / datas[buyPriceindex]-1 - datas[targetIndex]
+            targetchartdatas.append({"date":datas[numberIndex][-4:],"value":temp,"rank":datas[成本index]})
+    return targetchartdatas
+def gettargetimg():
+    imgpath = "bondscatter.png" if DEBUG else  r"C:\Users\Administrator\cccloud\static"
+
+    HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
+                                    HS300REALVALUE)
+    HS300pd = pd.DataFrame(HS300chartdatas)
+    ZZ500chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"),
+                                    ZZ500REALVALUE)
+    ZZ500pd = pd.DataFrame(ZZ500chartdatas)
+    plt.figure(figsize=(20, 10))
+    fig, ax = plt.subplots()
+    ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c="#2786ba", marker='.')
+    ax.scatter(ZZ500pd["date"], ZZ500pd["value"], linewidths=ZZ500pd["rank"] / 75, c="#40bfd2", marker='.')
+    ax.legend(["A", "B"])
+    ax.grid(which='major', axis='y', linestyle='-')
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+
+
+    plt.xticks([])
+    plt.savefig(imgpath)
 
 def sendMsg(msgList):
     """
@@ -130,7 +167,6 @@ def sendMsg(msgList):
     for msg in msgList:
         finMsg = finMsg + msg + "\n"
     发送消息().发送普通文本消息(finMsg, apiurl=robotUrl, atList=f.readlines())
-
 
 if __name__ == '__main__':
 
@@ -147,3 +183,9 @@ if __name__ == '__main__':
         print(msgList if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
+
+    robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=fa20378970ff8f99c854bf4334e1d46e9a33a78bbde78dbfb8f870a85fc876b6"
+
+    gettargetimg()
+    发送消息().发送整体跳转消息(robotUrl,"未出售基金收益图示.","http://cccloud.xyz/static/bondchart.png")
+
