@@ -16,16 +16,16 @@ import uuid
 # sys.path.append("..")
 # sys.path.append(os.getcwd())
 # print(os.getcwd())
-
+import math
 from invest.useExcel import GetInfoFromExcel
 from invest.getRaelValue import getTHHS300A
 from invest.getRaelValue import getTHZZ500C
 from tools.getSomething import getDateProperty
 from invest.阿里机器人接口 import 发送消息
 
-DEBUG= False
-mac=uuid.UUID(int = uuid.getnode()).hex[-12:]
-mac =  ":".join([mac[e:e+2] for e in range(0,11,2)])
+DEBUG = False
+mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
+mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
 if mac == "ac:de:48:00:11:22":
     DEBUG = True
 
@@ -64,7 +64,9 @@ def calculate(datass, realValue):
 
     msgList = []
     saleCount = 0
+    targetchart = {}
     for datas in datass:
+
         # 盈利计算
         for i in range(len(datas)):
             try:
@@ -82,7 +84,12 @@ def calculate(datass, realValue):
                 datas[numberIndex], datas[muchIndex], datas[buyPriceindex], realValue,
                 (realValue / datas[buyPriceindex] - 1) * 100,
                 datas[targetIndex] * 100, (datas[targetIndex] - (realValue / datas[buyPriceindex] - 1)) * 100))
-            pass
+        if datas[statusIndex] == "持有":
+            temp= str(math.floor((datas[targetIndex] - (realValue / datas[buyPriceindex] - 1)) * 100))
+            try :
+                targetchart[temp] = targetchart[temp]+1
+            except:
+                targetchart[temp] = 1
 
         if datas[statusIndex] == "持有" and realValue > datas[buyPriceindex] * (1 + float(datas[targetIndex])):
             msg = "编号为【{编号}】的【{份数}】份基金目前收益率【{当前收益率:.2f}%】超过计划收益率【{目标:.2f}%】可售出".format(
@@ -109,6 +116,7 @@ def calculate(datass, realValue):
             )
             # print(msg)
             msgList.append(msg)
+    print(targetchart)
     return msgList
 
 

@@ -151,7 +151,7 @@ def checkIpo():
     SZFLAG = False  # 暂时不检测深圳市场的新股
     SHFLAG = True
     for ipo in ipolist:
-        # print(ipo)
+        print(ipo)
         # print(ipo["purchasedate"])
         # print(today in ipo["purchasedate"])
         if today in ipo["purchasedate"]:
