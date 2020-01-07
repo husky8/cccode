@@ -24,7 +24,7 @@ from tools.getSomething import getDateProperty
 from invest.阿里机器人接口 import 发送消息
 from matplotlib import pyplot as plt
 import pandas as pd
-import json
+
 
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
@@ -135,7 +135,7 @@ def getchartdatas(datass, realValue):
             targetchartdatas.append({"date":datas[numberIndex][-4:],"value":temp,"rank":datas[成本index]})
     return targetchartdatas
 def gettargetimg():
-    imgpath = "bondscatter.png" if DEBUG else  r"C:\Users\Administrator\cccloud\static"
+    imgpath = "bondscatter.png" if DEBUG else  r"C:\Users\Administrator\cccloud\static\bondscatter.png"
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
                                     HS300REALVALUE)
@@ -143,11 +143,12 @@ def gettargetimg():
     ZZ500chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"),
                                     ZZ500REALVALUE)
     ZZ500pd = pd.DataFrame(ZZ500chartdatas)
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=(60, 40))
     fig, ax = plt.subplots()
     ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c="#2786ba", marker='.')
     ax.scatter(ZZ500pd["date"], ZZ500pd["value"], linewidths=ZZ500pd["rank"] / 75, c="#40bfd2", marker='.')
-    ax.legend(["A", "B"])
+    ax.legend(["HS300", "ZZ500"])
+    ax.text(0.5, 1, "{} bond target states".format(today), transform=ax.transAxes, color='#333333', size=20, ha='center', weight=100)
     ax.grid(which='major', axis='y', linestyle='-')
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
@@ -187,5 +188,6 @@ if __name__ == '__main__':
     robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=fa20378970ff8f99c854bf4334e1d46e9a33a78bbde78dbfb8f870a85fc876b6"
 
     gettargetimg()
+    time.sleep(2)
     发送消息().发送整体跳转消息(robotUrl,"未出售基金收益图示.","http://cccloud.xyz/static/bondchart.png")
 
