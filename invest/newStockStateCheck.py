@@ -194,5 +194,5 @@ def checkIpo():
 
 
 if __name__ == '__main__':
-    # checkBond()
+    checkBond()
     checkIpo()

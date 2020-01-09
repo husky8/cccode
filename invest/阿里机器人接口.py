@@ -70,7 +70,7 @@ class 发送消息():
             "actionCard": {
                 "title": title,
                 "text": "![]({}) ".format(localimg),
-                "hideAvatar": "0",
+                "hideAvatar": "1",
                 "btnOrientation": "0",
                 "singleTitle": singleTitle,
                 "singleURL": singleURL

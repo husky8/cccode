@@ -23,6 +23,8 @@ from invest.getRaelValue import getTHZZ500C
 from tools.getSomething import getDateProperty
 from invest.阿里机器人接口 import 发送消息
 from matplotlib import pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import matplotlib.ticker as ticker
 import pandas as pd
 
 DEBUG = False
@@ -151,15 +153,22 @@ def gettargetimg():
     ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c="#2786ba", marker='.')
     ax.scatter(ZZ500pd["date"], ZZ500pd["value"], linewidths=ZZ500pd["rank"] / 75, c="#40bfd2", marker='.')
     ax.legend(["HS300", "ZZ500"])
-    ax.text(0.5, 1, "{} bond target states".format(today), transform=ax.transAxes, color='#333333', size=20,
+    ax.text(0.5, 1, "{} bond target status".format(today), transform=ax.transAxes, color='#333333', size=20,
             ha='center', weight=100)
     ax.grid(which='major', axis='y', linestyle='-')
+
+    plt.gca().yaxis.set_major_formatter(FuncFormatter(to_percent))
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
-
-    plt.xticks([])
+    plt.xticks(rotation=45)
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(20))
+    # ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     plt.savefig(imgpath)
+
+def to_percent(temp, position):
+    return '%.0f'%(100 * temp) + '%'
+
 
 
 def sendMsg(msgList):
@@ -189,10 +198,10 @@ if __name__ == '__main__':
         print(msgList if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
-
+    # gettargetimg()
     if int(dateProperty["week_1"]) % 2 == 0:
         gettargetimg()
         time.sleep(2)
-        发送消息().发送整体跳转消息(robotUrl, "未出售基金收益图示.", "https://cccloud.xyz/static/bondscatter.png",
-                        singleTitle="{} bond target states".format(today),
+        发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter.png",
+                        singleTitle="{} bond target status".format(today),
                         singleURL="https://cccloud.xyz/static/bondscatter.png")
