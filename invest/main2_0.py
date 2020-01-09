@@ -165,6 +165,7 @@ def gettargetimg():
     ax.xaxis.set_major_locator(ticker.MultipleLocator(20))
     # ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     plt.savefig(imgpath)
+    print("make img success ~")
 
 def to_percent(temp, position):
     return '%.0f'%(100 * temp) + '%'
@@ -198,10 +199,12 @@ if __name__ == '__main__':
         print(msgList if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
-    # gettargetimg()
-    if int(dateProperty["week_1"]) % 2 == 0:
+    if DEBUG:
         gettargetimg()
-        time.sleep(2)
-        发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter.png",
-                        singleTitle="{} bond target status".format(today),
-                        singleURL="https://cccloud.xyz/static/bondscatter.png")
+    if not DEBUG:
+        if int(dateProperty["week_1"]) % 2 == 0:
+            gettargetimg()
+            time.sleep(10)
+            发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter.png",
+                            singleTitle="{} bond target status".format(today),
+                            singleURL="https://cccloud.xyz/static/bondscatter.png")

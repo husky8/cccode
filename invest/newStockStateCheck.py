@@ -28,7 +28,7 @@ from invest.阿里机器人接口 import 发送消息
 robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=f4d80d72e703ef2074e2e5eeada5fd930d14ba7fffb4b423c795f21928b8d6a0"
 
 today = time.strftime('%Y-%m-%d', time.localtime(time.time()))
-# today = "2019-06-18"
+# today = "2020-01-10"
 todayDiff_1 = getMarketDayDiff(today, diff=-1)
 todayDiff_1 = todayDiff_1[:4] + "-" + todayDiff_1[4:6] + "-" + todayDiff_1[6:]
 todayDiff_2 = getMarketDayDiff(today, diff=-2)
