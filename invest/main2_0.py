@@ -139,7 +139,7 @@ def getchartdatas(datass, realValue):
 
 
 def gettargetimg():
-    imgpath = "bondscatter.png" if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter.png"
+    imgpath = "bondscatter.png" if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(today)
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
                                     HS300REALVALUE)
@@ -205,6 +205,6 @@ if __name__ == '__main__':
         if int(dateProperty["week_1"]) % 2 == 0:
             gettargetimg()
             time.sleep(10)
-            发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter.png",
+            发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
                             singleTitle="{} bond target status".format(today),
-                            singleURL="https://cccloud.xyz/static/bondscatter.png")
+                            singleURL="https://cccloud.xyz/static/bondscatter/{}.png".format(today))
