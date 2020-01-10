@@ -130,7 +130,7 @@ def checkBond():
             else:
                 sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
                     i["saleDay"]) != today else "已于【今日】"))
-                sendMsg("你持仓的【{}】，将于【{}】上市交易，请注意择机出售".format(i["name"], i["saleDay"]), apiurl=ZZLRURL)
+                # sendMsg("你持仓的【{}】，将于【{}】上市交易，请注意择机出售".format(i["name"], i["saleDay"]), apiurl=ZZLRURL)
 
 
 def checkIpo():

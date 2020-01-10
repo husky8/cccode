@@ -147,7 +147,7 @@ def gettargetimg():
     ZZ500chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"),
                                     ZZ500REALVALUE)
     ZZ500pd = pd.DataFrame(ZZ500chartdatas)
-    plt.figure(figsize=(60, 40))
+    plt.figure(figsize=(2, 1))
     plt.rcParams['savefig.dpi'] = 300
     fig, ax = plt.subplots()
     ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c="#2786ba", marker='.')
