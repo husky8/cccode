@@ -116,14 +116,16 @@ def calculate(datass, realValue):
     return msgList
 
 
-def getchartdatas(datass, realValue):
+def getchartdatas(datass, realValue,mark=""):
     keys = (datass.pop(0))  # 取出第一行为字段索引
     numberIndex = keys.index('编号')
     成本index = keys.index('成本')
+    收益index = keys.index('成本')
     buyPriceindex = keys.index('购单价')
     targetIndex = keys.index('目标')
     statusIndex = keys.index('状态')
     targetchartdatas = []
+    pointColor = {"HS300":["#2786ba","#cc0000"],"ZZ500":["#40bfd2","#ff0000"]}
     for datas in datass:
 
         # 盈利计算
@@ -132,9 +134,10 @@ def getchartdatas(datass, realValue):
                 datas[i] = float(datas[i])
             except:
                 pass
-        if datas[statusIndex] == "持有":
-            temp = realValue / datas[buyPriceindex] - 1 - datas[targetIndex]
-            targetchartdatas.append({"date": datas[numberIndex][-4:], "value": temp, "rank": datas[成本index]})
+        temp = realValue / datas[buyPriceindex] - 1 - datas[targetIndex]
+        isHave = True if datas[statusIndex] == "持有" else False
+        targetchartdatas.append({"date": datas[numberIndex][-6:], "value": temp if isHave  else 0.03 if mark == "HS300" else 0.05 ,
+                    "rank": datas[成本index],"pointColor":pointColor[mark][0] if isHave else pointColor[mark][1]})
     return targetchartdatas
 
 
@@ -142,17 +145,18 @@ def gettargetimg():
     imgpath = "bondscatter.png" if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(today)
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
-                                    HS300REALVALUE)
+                                    HS300REALVALUE,"HS300")
     HS300pd = pd.DataFrame(HS300chartdatas)
     ZZ500chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"),
-                                    ZZ500REALVALUE)
+                                    ZZ500REALVALUE,"ZZ500")
     ZZ500pd = pd.DataFrame(ZZ500chartdatas)
+    # print(ZZ500pd)
     plt.figure(figsize=(2, 1))
     plt.rcParams['savefig.dpi'] = 300
     fig, ax = plt.subplots()
-    ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c="#2786ba", marker='.')
-    ax.scatter(ZZ500pd["date"], ZZ500pd["value"], linewidths=ZZ500pd["rank"] / 75, c="#40bfd2", marker='.')
-    ax.legend(["HS300", "ZZ500"])
+    ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c=HS300pd["pointColor"], marker='.')
+    ax.scatter(ZZ500pd["date"], ZZ500pd["value"], linewidths=ZZ500pd["rank"] / 75, c=ZZ500pd["pointColor"], marker='.')
+    # ax.legend(["HS300","ZZ500"])
     ax.text(0.5, 1, "{} bond target status".format(today), transform=ax.transAxes, color='#333333', size=20,
             ha='center', weight=100)
     ax.grid(which='major', axis='y', linestyle='-')
@@ -161,7 +165,7 @@ def gettargetimg():
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=30)
     ax.xaxis.set_major_locator(ticker.MultipleLocator(20))
     # ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     plt.savefig(imgpath)
@@ -169,8 +173,6 @@ def gettargetimg():
 
 def to_percent(temp, position):
     return '%.0f'%(100 * temp) + '%'
-
-
 
 def sendMsg(msgList):
     """
@@ -204,7 +206,7 @@ if __name__ == '__main__':
     if not DEBUG:
         if int(dateProperty["week_1"]) % 2 == 0:
             gettargetimg()
-            time.sleep(10)
+            time.sleep(2)
             发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
                             singleTitle="{} bond target status".format(today),
                             singleURL="https://cccloud.xyz/static/bondscatter/{}.png".format(today))
