@@ -24,8 +24,13 @@ from invest.getRaelValue import getNewStock
 from tools.DT import get_day_property
 from tools.DT import getMarketDayDiff
 from invest.阿里机器人接口 import 发送消息
+import configparser
 
-robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=f4d80d72e703ef2074e2e5eeada5fd930d14ba7fffb4b423c795f21928b8d6a0"
+config = configparser.ConfigParser()
+config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
+robotUrl = config.get("dingdingUrl", "hjbf")
+ccphone = config.get("phone", "cc")
+zsqphone = config.get("phone", "zsq")
 
 today = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 # today = "2020-01-10"
@@ -49,12 +54,18 @@ if mac == "ac:de:48:00:11:22":
 # DEBUG=True
 
 RETRYTIMES = 0
-HAVEINGLIST = {"123036": "先导转债", "128084": "木森转债", "113555": "振德转债", "110064": "建工转债", "113558": "日月转债",
-               "128088": "深南转债", "128089": "麦米转债", "128090": "汽模转2", "128092": "唐人转债", "113562": "璞泰转债",
-               "127015": "希望转债", "128093": "百川转债"}
+HAVEINGLIST = {"110064": {"name": "建工转债", "atList": [ccphone, zsqphone]},
+               "128088": {"name": "深南转债", "atList": [zsqphone]},
+               "128089": {"name": "麦米转债", "atList": [ccphone]},
+               "128090": {"name": "汽模转2", "atList": [ccphone]},
+               "128092": {"name": "唐人转债", "atList": [zsqphone]},
+               "113562": {"name": "璞泰转债", "atList": [ccphone]},
+               "127015": {"name": "希望转债", "atList": [ccphone, zsqphone]},
+               "128093": {"name": "百川转债", "atList": [ccphone, zsqphone]},
+               "123041": {"name": "东财转2", "atList": [ccphone, zsqphone]}}
 
 
-def sendMsg(msg, apiurl="default"):
+def sendMsg(msg, apiurl="default", atList="all"):
     """
     :param msgList:
     :return: 解析消息列表 并发送钉钉消息
@@ -62,7 +73,8 @@ def sendMsg(msg, apiurl="default"):
     if apiurl == "default":
         apiurl = robotUrl
     print(apiurl)
-    发送消息().发送普通文本消息(msg, apiurl, isAtAll=True)
+    发送消息().发送普通文本消息(msg, apiurl, isAtAll=True if atList == "all" else False,
+                    atList=atList if atList != "all" else [])
 
 
 def checkBond():
@@ -125,11 +137,11 @@ def checkBond():
     if saleRes != []:
         for i in saleRes:
             if DEBUG:
-                print("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
-                    i["saleDay"]) != today else "已于【今日】"))
+                print("你持仓的【{}】，{}上市交易，请注意择机出售 {}".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
+                    i["saleDay"]) != today else "已于【今日】",HAVEINGLIST[i["code"]]['atList']))
             else:
                 sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
-                    i["saleDay"]) != today else "已于【今日】"))
+                    i["saleDay"]) != today else "已于【今日】"),atList=HAVEINGLIST[i["code"]]['atList'])
                 # sendMsg("你持仓的【{}】，将于【{}】上市交易，请注意择机出售".format(i["name"], i["saleDay"]), apiurl=ZZLRURL)
 
 
