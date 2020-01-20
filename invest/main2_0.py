@@ -188,6 +188,16 @@ def sendMsg(msgList):
 
 if __name__ == '__main__':
 
+    if DEBUG:
+        gettargetimg()
+    if not DEBUG:
+        if int(dateProperty["week_1"]) % 2 == 0:
+            gettargetimg()
+            time.sleep(2)
+            发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
+                            singleTitle="{} bond target status".format(today),
+                            singleURL="https://cccloud.xyz/static/bondscatter/{}.png".format(today))
+
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass, HS300REALVALUE)
     if DEBUG:
@@ -201,12 +211,4 @@ if __name__ == '__main__':
         print(msgList if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
-    if DEBUG:
-        gettargetimg()
-    if not DEBUG:
-        if int(dateProperty["week_1"]) % 2 == 0:
-            gettargetimg()
-            time.sleep(2)
-            发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
-                            singleTitle="{} bond target status".format(today),
-                            singleURL="https://cccloud.xyz/static/bondscatter/{}.png".format(today))
+

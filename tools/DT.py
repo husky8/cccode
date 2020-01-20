@@ -69,12 +69,12 @@ def get_day_property(date=""):
             r_lunar = "闰{}月{}".format(config.YMC[day.Lmc], config.RMC[day.Ldi])
         else:
             r_lunar = "闰{}月{}".format(config.YMC[day.Lmc], config.RMC[day.Ldi])
-
-        if date in config.WORK_DAY:
-            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "workday": True, "lunar": r_lunar}}
-        if date in config.FREE_DAY:
-            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "workday": False, "lunar": r_lunar}}
         weekday = datetime.datetime(y, m, d).weekday()
+        if date in config.WORK_DAY:
+            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday,"workday": True, "lunar": r_lunar}}
+        if date in config.FREE_DAY:
+            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday,"workday": False, "lunar": r_lunar}}
+
         if 0 <= weekday <= 4:
             return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday,"workday": True, "lunar": r_lunar}}
         else:
