@@ -25,6 +25,7 @@ from invest.阿里机器人接口 import 发送消息
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import matplotlib.ticker as ticker
+from matplotlib.pyplot import MultipleLocator
 import pandas as pd
 
 DEBUG = False
@@ -116,7 +117,7 @@ def calculate(datass, realValue):
     return msgList
 
 
-def getchartdatas(datass, realValue,mark=""):
+def getchartdatas(datass, realValue, mark=""):
     keys = (datass.pop(0))  # 取出第一行为字段索引
     numberIndex = keys.index('编号')
     成本index = keys.index('成本')
@@ -125,7 +126,7 @@ def getchartdatas(datass, realValue,mark=""):
     targetIndex = keys.index('目标')
     statusIndex = keys.index('状态')
     targetchartdatas = []
-    pointColor = {"HS300":["#2786ba","#cc0000"],"ZZ500":["#40bfd2","#ff0000"]}
+    pointColor = {"HS300": ["#2786ba", "#cc0000"], "ZZ500": ["#40bfd2", "#ff0000"]}
     for datas in datass:
 
         # 盈利计算
@@ -136,19 +137,21 @@ def getchartdatas(datass, realValue,mark=""):
                 pass
         temp = realValue / datas[buyPriceindex] - 1 - datas[targetIndex]
         isHave = True if datas[statusIndex] == "持有" else False
-        targetchartdatas.append({"date": datas[numberIndex][-6:], "value": temp if isHave  else 0.03 if mark == "HS300" else 0.05 ,
-                    "rank": datas[成本index],"pointColor":pointColor[mark][0] if isHave else pointColor[mark][1]})
+        targetchartdatas.append(
+            {"date": datas[numberIndex][-6:], "value": temp if isHave else 0.03 if mark == "HS300" else 0.05,
+             "rank": datas[成本index], "pointColor": pointColor[mark][0] if isHave else pointColor[mark][1]})
     return targetchartdatas
 
 
 def gettargetimg():
-    imgpath = "bondscatter.png" if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(today)
+    imgpath = "{}.png".format(today) if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(
+        today)
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
-                                    HS300REALVALUE,"HS300")
+                                    HS300REALVALUE, "HS300")
     HS300pd = pd.DataFrame(HS300chartdatas)
     ZZ500chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"),
-                                    ZZ500REALVALUE,"ZZ500")
+                                    ZZ500REALVALUE, "ZZ500")
     ZZ500pd = pd.DataFrame(ZZ500chartdatas)
     # print(ZZ500pd)
     plt.figure(figsize=(2, 1))
@@ -156,23 +159,30 @@ def gettargetimg():
     fig, ax = plt.subplots()
     ax.scatter(HS300pd["date"], HS300pd["value"], linewidths=HS300pd["rank"] / 75, c=HS300pd["pointColor"], marker='.')
     ax.scatter(ZZ500pd["date"], ZZ500pd["value"], linewidths=ZZ500pd["rank"] / 75, c=ZZ500pd["pointColor"], marker='.')
+    ax.plot(ZZ500pd["date"], [0.0005 for i in range(len(ZZ500pd["date"]))], c="#d82626", linewidth=1)
+    ax.plot(ZZ500pd["date"], [-0.0005 for i in range(len(ZZ500pd["date"]))], c="#009900", linewidth=1)
     # ax.legend(["HS300","ZZ500"])
-    ax.text(0.5, 1, "{} bond target status".format(today), transform=ax.transAxes, color='#333333', size=20,
+    ax.text(0.5, 1.05, "{} bond target status".format(today), transform=ax.transAxes, color='#333333', size=20,
             ha='center', weight=100)
     ax.grid(which='major', axis='y', linestyle='-')
-
+    ax.yaxis.set_major_locator(MultipleLocator(0.025))
     plt.gca().yaxis.set_major_formatter(FuncFormatter(to_percent))
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
+    # ax.spines['bottom'].set_visible(False)
+    ax.margins(0, 0.01)
+    # plt.xticks([])
     plt.xticks(rotation=30)
     ax.xaxis.set_major_locator(ticker.MultipleLocator(20))
     # ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     plt.savefig(imgpath)
+    # print(min(HS300pd["value"].min(),ZZ500pd["value"].min()))
     print("make img success ~")
 
+
 def to_percent(temp, position):
-    return '%.0f'%(100 * temp) + '%'
+    return '%.1f' % (100 * temp) + '%'
+
 
 def sendMsg(msgList):
     """
@@ -211,4 +221,3 @@ if __name__ == '__main__':
         print(msgList if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
-
