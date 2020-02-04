@@ -98,9 +98,9 @@ if __name__ == '__main__':
     print(zz500)
     # s = getStock(stockid = "399006")
     # s = getNewStock("bond")
-    s = getNewStock("ipo")
+    # s = getNewStock("ipo")
     # s= getIndex("399006")
-    print(s)
+    # print(s)
     # print(s["info"]["c"])
     1.4436
     1.0738

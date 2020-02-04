@@ -39,7 +39,7 @@ if mac == "ac:de:48:00:11:22":
 today = time.strftime('%Y%m%d', time.localtime(time.time()))
 
 dateProperty = getDateProperty(today)
-if dateProperty["worknm"] != "工作日" or int(dateProperty["week_1"]) >= 6:
+if (dateProperty["worknm"] != "工作日" or int(dateProperty["week_1"]) >= 6) and not DEBUG:
     print("当天不开盘")
     exit(0)
 
