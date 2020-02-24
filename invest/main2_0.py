@@ -16,7 +16,7 @@ import uuid
 # sys.path.append("..")
 # sys.path.append(os.getcwd())
 # print(os.getcwd())
-import math
+import json
 from invest.useExcel import GetInfoFromExcel
 from invest.getRaelValue import getTHHS300A
 from invest.getRaelValue import getTHZZ500C
@@ -101,7 +101,7 @@ def calculate(datass, realValue):
             msgList.append(msg)
             continue
     if saleCount != 0:
-        msgList.append("合计应出售【{合计出售份数:.2f}】".format(合计出售份数=saleCount))
+        msgList.append("合计应出售【{合计出售份数:.2f}】份".format(合计出售份数=saleCount))
 
         # 合并计算
         if datas[statusIndex] == "持有" and realValue < datas[buyPriceindex] * (1 - 1.5 * datas[targetIndex]):
@@ -172,9 +172,9 @@ def gettargetimg():
     # ax.spines['bottom'].set_visible(False)
     ax.margins(0, 0.01)
     # plt.xticks([])
-    plt.xticks(rotation=30)
+    plt.xticks(rotation=45)
     ax.xaxis.set_major_locator(ticker.MultipleLocator(20))
-    # ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
+    # ax.yaxis.set_major_locator(ticker.MultipleLocator(20))
     plt.savefig(imgpath)
     # print(min(HS300pd["value"].min(),ZZ500pd["value"].min()))
     print("make img success ~")
@@ -203,21 +203,22 @@ if __name__ == '__main__':
     if not DEBUG:
         if int(dateProperty["week_1"]) % 2 == 0:
             gettargetimg()
-            time.sleep(2)
             发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
                             singleTitle="{} bond target status".format(today),
                             singleURL="https://cccloud.xyz/static/bondscatter/{}.png".format(today))
-
+    time.sleep(10)
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass, HS300REALVALUE)
     if DEBUG:
-        print(msgList if msgList != [] else "沪深300无结果")
+        print(json.dumps(msgList,ensure_ascii=False)  if msgList != [] else "沪深300无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
 
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"))
+    # ZZ500REALVALUE = 1.5
     msgList = calculate(datass, ZZ500REALVALUE)
+
     if DEBUG:
-        print(msgList if msgList != [] else "中证500无结果")
+        print(json.dumps(msgList,ensure_ascii=False) if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
