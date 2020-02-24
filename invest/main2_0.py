@@ -206,7 +206,7 @@ if __name__ == '__main__':
             发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
                             singleTitle="{} bond target status".format(today),
                             singleURL="https://cccloud.xyz/static/bondscatter/{}.png".format(today))
-    time.sleep(10)
+            time.sleep(10)
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass, HS300REALVALUE)
     if DEBUG:
@@ -215,10 +215,11 @@ if __name__ == '__main__':
         if msgList != []: sendMsg(msgList)
 
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"))
-    # ZZ500REALVALUE = 1.5
+    # ZZ500REALVALUE = 1.1623
     msgList = calculate(datass, ZZ500REALVALUE)
 
     if DEBUG:
+        print(len(msgList))
         print(json.dumps(msgList,ensure_ascii=False) if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
