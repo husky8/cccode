@@ -31,7 +31,7 @@ import pandas as pd
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
 mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
-if mac == "ac:de:48:00:11:22":
+if mac in ("ac:de:48:00:11:22","00:e0:4c:71:6b:78"):
     DEBUG = True
 
 # DEBUG=True
@@ -197,7 +197,6 @@ def sendMsg(msgList):
 
 
 if __name__ == '__main__':
-
     if DEBUG:
         gettargetimg()
     if not DEBUG:
@@ -217,7 +216,6 @@ if __name__ == '__main__':
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"))
     # ZZ500REALVALUE = 1.1623
     msgList = calculate(datass, ZZ500REALVALUE)
-
     if DEBUG:
         print(len(msgList))
         print(json.dumps(msgList,ensure_ascii=False) if msgList != [] else "中证500无结果")
