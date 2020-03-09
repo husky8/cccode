@@ -55,11 +55,8 @@ if mac == "ac:de:48:00:11:22":
 
 RETRYTIMES = 0
 HAVEINGLIST = {
-               "128090": {"name": "汽模转2", "atList": [ccphone]},
-               "128092": {"name": "唐人转债", "atList": [zsqphone]},
-               "113562": {"name": "璞泰转债", "atList": [ccphone]},
-               "127015": {"name": "希望转债", "atList": [ccphone, zsqphone]},
-               "123041": {"name": "东财转2", "atList": [ccphone, zsqphone]}}
+               "113568": {"name": "新春转债", "atList": [zsqphone]},
+}
 
 
 def sendMsg(msg, apiurl="default", atList="all"):
