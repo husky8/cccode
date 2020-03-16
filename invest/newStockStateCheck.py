@@ -55,7 +55,8 @@ if mac == "ac:de:48:00:11:22":
 
 RETRYTIMES = 0
 HAVEINGLIST = {
-               "113568": {"name": "新春转债", "atList": [zsqphone]},
+    "113568": {"name": "新春转债", "atList": [zsqphone]},
+    "110067": {"name": "华安转债", "atList": [zsqphone]},
 }
 
 
@@ -110,7 +111,7 @@ def checkBond():
         if DEBUG:
             print("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes))
         else:
-            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes),atList=[ccphone,zsqphone])
+            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), atList=[ccphone, zsqphone])
             sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZZLRURL)
 
     # if searchRes != []:
@@ -125,17 +126,17 @@ def checkBond():
         if DEBUG:
             print("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes))
         else:
-            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes),atList=[ccphone,zsqphone])
+            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), atList=[ccphone, zsqphone])
             sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZZLRURL)
 
     if saleRes != []:
         for i in saleRes:
             if DEBUG:
                 print("你持仓的【{}】，{}上市交易，请注意择机出售 {}".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
-                    i["saleDay"]) != today else "已于【今日】",HAVEINGLIST[i["code"]]['atList']))
+                    i["saleDay"]) != today else "已于【今日】", HAVEINGLIST[i["code"]]['atList']))
             else:
                 sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
-                    i["saleDay"]) != today else "已于【今日】"),atList=HAVEINGLIST[i["code"]]['atList'])
+                    i["saleDay"]) != today else "已于【今日】"), atList=HAVEINGLIST[i["code"]]['atList'])
                 # sendMsg("你持仓的【{}】，将于【{}】上市交易，请注意择机出售".format(i["name"], i["saleDay"]), apiurl=ZZLRURL)
 
 
