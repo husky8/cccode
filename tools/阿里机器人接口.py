@@ -63,9 +63,11 @@ class 发送消息():
 
 
 if __name__ == '__main__':
+    url = "https://oapi.dingtalk.com/robot/send?access_token=cf51a41dccf6b742196dae89e6b73c586c89761d50695d29fb2712c314eb9b13"
+    发送消息().发送普通文本消息("乐乐接旨，午门外剁了",url)
     # url = 'https://oapi.dingtalk.com/robot/send?access_token=0c57dacf315f6b76a7fa869819820fa108b9eb4111920fb353b2dd22d2d6efd4'
-    url="https://oapi.dingtalk.com/robot/send?access_token=5985b0b1d4f41624575d46c350fd8413d5ce32106889446fef74735e06e75b4b"
-    发送消息().发送普通文本消息("小伙伴们，本周六(12.29)中午呷哺呷哺，约的吱一声",url,isAtAll=True)
+    # url="https://oapi.dingtalk.com/robot/send?access_token=5985b0b1d4f41624575d46c350fd8413d5ce32106889446fef74735e06e75b4b"
+    # 发送消息().发送普通文本消息("小伙伴们，本周六(12.29)中午呷哺呷哺，约的吱一声",url,isAtAll=True)
     # s = 发送消息().发送链接文本消息(url, "这回对了",
     #                     "详情请点击",
     #                     picUrl="http://img0.imgtn.bdimg.com/it/u=3348813714,2010737230&fm=26&gp=0.jpg",

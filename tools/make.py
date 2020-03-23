@@ -9,9 +9,6 @@ from tools import getSomething
 
 
 
-
-
-
 def makePicture(name=None,string=None,fontSize='Auto',fontColor=None,picSize=None,bg=None):
     # 获取一个Image对象，参数分别是RGB模式。宽150，高30，随机颜色
     if not logic.isColor(bg):

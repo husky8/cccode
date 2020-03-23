@@ -57,6 +57,8 @@ RETRYTIMES = 0
 HAVEINGLIST = {
     "113568": {"name": "新春转债", "atList": [zsqphone]},
     "110067": {"name": "华安转债", "atList": [zsqphone]},
+    "128102": {"name": "海大转债", "atList": [ccphone]},
+
 }
 
 

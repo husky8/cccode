@@ -135,6 +135,7 @@ def getchartdatas(datass, realValue, mark=""):
                 datas[i] = float(datas[i])
             except:
                 pass
+        # temp = realValue / datas[buyPriceindex] - 1 # 查看当前收益状态
         temp = realValue / datas[buyPriceindex] - 1 - datas[targetIndex]
         isHave = True if datas[statusIndex] == "持有" else False
         targetchartdatas.append(
@@ -144,7 +145,7 @@ def getchartdatas(datass, realValue, mark=""):
 
 
 def gettargetimg():
-    imgpath = "{}.png".format(today) if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(
+    imgpath = "log/{}.png".format(today) if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(
         today)
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
@@ -214,7 +215,7 @@ if __name__ == '__main__':
         if msgList != []: sendMsg(msgList)
 
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="zz500"))
-    # ZZ500REALVALUE = 1.1623
+    # ZZ500REALVALUE = ZZ500REALVALUE*1.05
     msgList = calculate(datass, ZZ500REALVALUE)
     if DEBUG:
         print(len(msgList))
