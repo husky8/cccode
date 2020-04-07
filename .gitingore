@@ -1,0 +1,18 @@
+.idea
+venv
+.gitignore
+Arial Unicode.ttf
+config.ini
+GETMONEY.py
+mysqll.py
+study.html
+xmind转换.py
+xx.py
+*.pyc
+优惠提报服务.md
+优惠提报服务.txt
+成品_只差配置.py
+生成图片.py
+生成图片在一起.py
+资讯用例.md
+资讯用例.txt
