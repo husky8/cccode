@@ -31,7 +31,7 @@ import pandas as pd
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
 mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
-if mac in ("ac:de:48:00:11:22","00:e0:4c:71:6b:78"):
+if mac in ("ac:de:48:00:11:22", "00:e0:4c:71:6b:78"):
     DEBUG = True
 
 # DEBUG=True
@@ -128,7 +128,7 @@ def getchartdatas(datass, realValue, mark=""):
     targetchartdatas = []
     pointColor = {"HS300": ["#2786ba", "#cc0000"], "ZZ500": ["#40bfd2", "#ff0000"]}
     for datas in datass:
-
+        # print(datas)
         # 盈利计算
         for i in range(len(datas)):
             try:
@@ -136,16 +136,23 @@ def getchartdatas(datass, realValue, mark=""):
             except:
                 pass
         # temp = realValue / datas[buyPriceindex] - 1 # 查看当前收益状态
+        # isHave = True if datas[statusIndex] == "持有" else False
+        # targetchartdatas.append(
+        #     {"date": datas[numberIndex][-6:], "value": float(datas[statusIndex-1]) / datas[成本index] ,
+        #      "rank": datas[成本index], "pointColor": pointColor[mark][0] if isHave else pointColor[mark][1]})
+
         temp = realValue / datas[buyPriceindex] - 1 - datas[targetIndex]
         isHave = True if datas[statusIndex] == "持有" else False
         targetchartdatas.append(
             {"date": datas[numberIndex][-6:], "value": temp if isHave else 0.03 if mark == "HS300" else 0.05,
              "rank": datas[成本index], "pointColor": pointColor[mark][0] if isHave else pointColor[mark][1]})
+
     return targetchartdatas
 
 
 def gettargetimg():
-    imgpath = "log/{}.png".format(today) if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(
+    imgpath = "log/{}.png".format(
+        today) if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(
         today)
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
@@ -210,7 +217,7 @@ if __name__ == '__main__':
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass, HS300REALVALUE)
     if DEBUG:
-        print(json.dumps(msgList,ensure_ascii=False)  if msgList != [] else "沪深300无结果")
+        print(json.dumps(msgList, ensure_ascii=False) if msgList != [] else "沪深300无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
 
@@ -219,6 +226,6 @@ if __name__ == '__main__':
     msgList = calculate(datass, ZZ500REALVALUE)
     if DEBUG:
         print(len(msgList))
-        print(json.dumps(msgList,ensure_ascii=False) if msgList != [] else "中证500无结果")
+        print(json.dumps(msgList, ensure_ascii=False) if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)

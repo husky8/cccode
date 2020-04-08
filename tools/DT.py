@@ -7,7 +7,7 @@ import math
 import datetime
 import requests
 import json
-from logzero import logger
+
 
 
 
