@@ -65,7 +65,7 @@ HAVEINGLIST = {
 }
 
 
-def sendMsg(msg, apiurl="default", atList="all"):
+def sendMsg(msg, apiurl="default", atList="all",isAtAll=True):
     """
     :param msgList:
     :return: 解析消息列表 并发送钉钉消息
@@ -73,7 +73,7 @@ def sendMsg(msg, apiurl="default", atList="all"):
     if apiurl == "default":
         apiurl = robotUrl
     print(apiurl)
-    发送消息().发送普通文本消息(msg, apiurl, isAtAll=True if atList == "all" else False,
+    发送消息().发送普通文本消息(msg, apiurl, isAtAll=isAtAll if atList == "all" else False,
                     atList=atList if atList != "all" else [])
 
 
@@ -115,8 +115,8 @@ def checkBond():
             print("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes))
         else:
             sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), atList=[ccphone, zsqphone])
-            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZZLURL)
-            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZHURL)
+            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZZLURL,isAtAll=False)
+            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZHURL,isAtAll=False)
 
     # if searchRes != []:
     #     searchRes = "、".join(searchRes)
@@ -131,8 +131,8 @@ def checkBond():
             print("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes))
         else:
             sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), atList=[ccphone, zsqphone])
-            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZZLURL)
-            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZHURL)
+            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZZLURL,isAtAll=False)
+            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZHURL,isAtAll=False)
 
     if saleRes != []:
         for i in saleRes:
