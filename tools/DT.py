@@ -88,7 +88,7 @@ def get_git_history():
     os.system(
         "git log --after='{b30day} 00:00:00' --graph --date=format:'%Y-%m-%d %H:%M:%S' "
         "--pretty=format:'%Cred%h%Creset - 【%an】 %C(yellow)%d%Cblue %s %Cgreen(%cd) %C(bold blue)%Creset' "
-        "> log.txt".format(b30day=datetime.date.today() - datetime.timedelta(days=30))
+        "> 1111.txt".format(b30day=datetime.date.today() - datetime.timedelta(days=30))
     )
     f = open("log.txt", encoding="utf-8")
     res = {}
