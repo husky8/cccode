@@ -217,6 +217,7 @@ if __name__ == '__main__':
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass, HS300REALVALUE)
     if DEBUG:
+        print(len(msgList) - 1)
         print(json.dumps(msgList, ensure_ascii=False) if msgList != [] else "沪深300无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
@@ -225,7 +226,7 @@ if __name__ == '__main__':
     # ZZ500REALVALUE = ZZ500REALVALUE*1.05
     msgList = calculate(datass, ZZ500REALVALUE)
     if DEBUG:
-        print(len(msgList))
+        print(len(msgList) -1)
         print(json.dumps(msgList, ensure_ascii=False) if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
