@@ -32,7 +32,7 @@ def getStock(stockid):
 
 def getIndex(indexid):
 
-    r = requests.get("http://push2.eastmoney.com/api/qt/stock/details/get?secid=0.399006&fields1=f1,f2,f3,f4&fields2=f51,f52,f53,f54,f55")
+    r = requests.get("http://push2.eastmoney.com/api/qt/stock/details/get?secid=0.{indexid}&fields1=f1,f2,f3,f4&fields2=f51,f52,f53,f54,f55".format(indexid=indexid))
     res = eval(r.text.replace("(", "").replace(")", "").replace("false", "False"))
     return res["data"]
 
