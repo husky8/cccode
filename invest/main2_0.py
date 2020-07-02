@@ -210,7 +210,7 @@ def checkRange():
     upvalue = 1.05 ** ((next_day - cur_day).days / 365)
     this300value = float(getIndex(399300)["details"][-1].split(",")[1])
     this500value = float(getIndex(399905)["details"][-1].split(",")[1])
-    print(this300value,this500value,upvalue,5300*upvalue*0.75,11000*upvalue*0.65)
+    # print(this300value,this500value,upvalue,5300*upvalue*0.75,11000*upvalue*0.65)
     if  DEBUG:
         if this300value > 5300*upvalue*0.75:
             print(["沪深300已到达停止定投限制 请确认后取消定投",])
