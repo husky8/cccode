@@ -5,6 +5,7 @@ import time
 import sys
 import importlib, sys
 import datetime
+
 importlib.reload(sys)
 import configparser
 
@@ -203,6 +204,7 @@ def sendMsg(msgList):
         finMsg = finMsg + msg + "\n"
     发送消息().发送普通文本消息(finMsg, apiurl=robotUrl, atList=f.readlines())
 
+
 def checkRange():
     from invest.getRaelValue import getIndex
     cur_day = datetime.datetime(2015, 6, 10)
@@ -210,17 +212,23 @@ def checkRange():
     upvalue = 1.05 ** ((next_day - cur_day).days / 365)
     this300value = float(getIndex(399300)["details"][-1].split(",")[1])
     this500value = float(getIndex(399905)["details"][-1].split(",")[1])
-    # print(this300value,this500value,upvalue,5300*upvalue*0.75,11000*upvalue*0.65)
-    if  DEBUG:
-        if this300value > 5300*upvalue*0.75:
-            print(["沪深300已到达停止定投限制 请确认后取消定投",])
-        if this500value > 11500*upvalue*0.65:
-            print(["中证500已到达停止定投限制 请确认后取消定投",])
+    if DEBUG:
+        print("This 300 Value is {}".format(this300value))
+        print("This 500 Value is {}".format(this500value))
+        print("Years Up Value is {:.2f}%".format(100*upvalue))
+        print("Higt 300 Value is {}".format(round(5300 * upvalue * 0.75, 2)))
+        print("Higt 500 Value is {}".format(round(11000 * upvalue * 0.65, 2)))
+        print("Higt 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75, 2))))
+        print("Higt 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65, 2))))
+        if this300value > 5300 * upvalue * 0.75:
+            print(["沪深300已到达停止定投限制 请确认后取消定投", ])
+        if this500value > 11500 * upvalue * 0.65:
+            print(["中证500已到达停止定投限制 请确认后取消定投", ])
     else:
-        if this300value > 5300*upvalue*0.75:
-            sendMsg(["沪深300已到达停止定投限制 请确认后取消定投",])
-        if this500value > 11500*upvalue*0.65:
-            sendMsg(["中证500已到达停止定投限制 请确认后取消定投",])
+        if this300value > 5300 * upvalue * 0.75:
+            sendMsg(["沪深300已到达停止定投限制 请确认后取消定投", ])
+        if this500value > 11500 * upvalue * 0.65:
+            sendMsg(["中证500已到达停止定投限制 请确认后取消定投", ])
 
 
 if __name__ == '__main__':
@@ -245,9 +253,8 @@ if __name__ == '__main__':
     # ZZ500REALVALUE = ZZ500REALVALUE*1.05
     msgList = calculate(datass, ZZ500REALVALUE)
     if DEBUG:
-        print(len(msgList) -1)
+        print(len(msgList) - 1)
         print(json.dumps(msgList, ensure_ascii=False) if msgList != [] else "中证500无结果")
     if not DEBUG:
         if msgList != []: sendMsg(msgList)
     checkRange()
-
