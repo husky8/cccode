@@ -212,23 +212,62 @@ def checkRange():
     upvalue = 1.05 ** ((next_day - cur_day).days / 365)
     this300value = float(getIndex(399300)["details"][-1].split(",")[1])
     this500value = float(getIndex(399905)["details"][-1].split(",")[1])
+
+    config = configparser.ConfigParser()
+    config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
+    now300target = config.get("RegularInvestment", "HS300")
+    now500target = config.get("RegularInvestment", "ZZ500")
+    print(now300target)
+    print(now500target)
     if DEBUG:
         print("This 300 Value is {}".format(this300value))
         print("This 500 Value is {}".format(this500value))
-        print("Years Up Value is {:.2f}%".format(100*upvalue))
+        print("Years Up Value is {:.2f}%".format(100 * upvalue))
         print("Higt 300 Value is {}".format(round(5300 * upvalue * 0.75, 2)))
         print("Higt 500 Value is {}".format(round(11000 * upvalue * 0.65, 2)))
         print("Higt 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75, 2))))
         print("Higt 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65, 2))))
-        if this300value > 5300 * upvalue * 0.75:
-            print(["沪深300已到达停止定投限制 请确认后取消定投", ])
-        if this500value > 11500 * upvalue * 0.65:
-            print(["中证500已到达停止定投限制 请确认后取消定投", ])
+        print("Low 300 Value is {}".format(round(5300 * upvalue * 0.75 * 0.9, 2)))
+        print("Low 500 Value is {}".format(round(11000 * upvalue * 0.65 * 0 / 9, 2)))
+        print("Low 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75 * 0.9, 2))))
+        print("Low 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65 * 0.9, 2))))
+        print("now 300 target is {}".format(now300target))
+        print("now 500 target is {}".format(now500target))
+        if now300target == "TOP" and this300value > 5300 * upvalue * 0.75:
+            print(["沪深300已到达停止定投限制 请确认后【取消】定投", ])
+            config.set("RegularInvestment", "HS300", "LOW")
+            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+
+        if now500target == "TOP" and this500value > 11500 * upvalue * 0.65:
+            print(["中证500已到达停止定投限制 请确认后【取消】定投", ])
+            config.set("RegularInvestment", "ZZ500", "LOW")
+            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+
+        if now300target == "LOW" and this300value < 5300 * upvalue * 0.75 * 0.9:
+            print(["沪深300已到达停止定投限制 请确认后【开启】定投", ])
+            config.set("RegularInvestment", "HS300", "TOP")
+            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+
+        if now500target == "LOW" and this500value < 11500 * upvalue * 0.65 * 0.9:
+            print(["中证500已到达停止定投限制 请确认后【开启】定投", ])
+            config.set("RegularInvestment", "ZZ500", "TOP")
+            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
     else:
-        if this300value > 5300 * upvalue * 0.75:
-            sendMsg(["沪深300已到达停止定投限制 请确认后取消定投", ])
-        if this500value > 11500 * upvalue * 0.65:
-            sendMsg(["中证500已到达停止定投限制 请确认后取消定投", ])
+        if now300target == "TOP" and this300value > 5300 * upvalue * 0.75 * 0.9:
+            sendMsg(["沪深300已到达停止定投限制 请确认后【取消】定投", ])
+            config.set("RegularInvestment", "HS300", "LOW")
+
+        if now500target == "TOP" and this500value > 11500 * upvalue * 0.65 * 0.9:
+            sendMsg(["中证500已到达停止定投限制 请确认后【取消】定投", ])
+            config.set("RegularInvestment", "ZZ500", "LOW")
+
+        if now300target == "LOW" and this300value < 5300 * upvalue * 0.7 * 0.9:
+            sendMsg(["沪深300已到达开始定投限制 请确认后【开启】定投", ])
+            config.set("RegularInvestment", "HS300", "TOP")
+
+        if now500target == "LOW" and this500value < 11500 * upvalue * 0.6 * 0.9:
+            sendMsg(["中证500已到达开始定投限制 请确认后【开启】定投", ])
+            config.set("RegularInvestment", "ZZ500", "TOP")
 
 
 if __name__ == '__main__':
