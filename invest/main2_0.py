@@ -217,59 +217,68 @@ def checkRange():
     config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
     now300target = config.get("RegularInvestment", "hs300")
     now500target = config.get("RegularInvestment", "zz500")
-    print(now300target)
-    print(now500target)
     if DEBUG:
-        print("This 300 Value is {}".format(this300value))
-        print("This 500 Value is {}".format(this500value))
+        print("-" * 66)
         print("Years Up Value is {:.2f}%".format(100 * upvalue))
-        print("Higt 300 Value is {}".format(round(5300 * upvalue * 0.75, 2)))
-        print("Higt 500 Value is {}".format(round(11000 * upvalue * 0.65, 2)))
-        print("Higt 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75, 2))))
-        print("Higt 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65, 2))))
-        print("Low 300 Value is {}".format(round(5300 * upvalue * 0.75 * 0.9, 2)))
-        print("Low 500 Value is {}".format(round(11000 * upvalue * 0.65 * 0 / 9, 2)))
-        print("Low 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75 * 0.9, 2))))
-        print("Low 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65 * 0.9, 2))))
-        print("now 300 target is {}".format(now300target))
-        print("now 500 target is {}".format(now500target))
+        print("-"*66)
+        print("highest  HS300 is 5300")
+        print("This 300 Value is {}".format(this300value))
+        print("Now 300 target is {}".format(now300target))
+        if now300target == "TOP":
+            print("Higt 300 Value is {}".format(round(5300 * upvalue * 0.75, 2)))
+            print("Higt 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75, 2))))
+        elif now300target == "LOW":
+            print("Low 300 Value is {}".format(round(5300 * upvalue * 0.75 * 0.9, 2)))
+            print("Low 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75 * 0.9, 2))))
+        print("-" * 66)
+        print("highest  ZZ500 is 11000")
+        print("This 500 Value is {}".format(this500value))
+        print("Now 500 target is {}".format(now500target))
+        if now500target == "TOP":
+            print("Higt 500 Value is {}".format(round(11000 * upvalue * 0.65, 2)))
+            print("Higt 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65, 2))))
+        elif now500target == "LOW":
+            print("Low 500 Value is {}".format(round(11000 * upvalue * 0.65 * 0 / 9, 2)))
+            print("Low 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65 * 0.9, 2))))
+
+
         if now300target == "TOP" and this300value > 5300 * upvalue * 0.75:
-            print(["沪深300已到达停止定投限制 请确认后【取消】定投", ])
+            print(["沪深300已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
             config.set("RegularInvestment", "hs300", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now500target == "TOP" and this500value > 11500 * upvalue * 0.65:
-            print(["中证500已到达停止定投限制 请确认后【取消】定投", ])
+            print(["中证500已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
             config.set("RegularInvestment", "zz500", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now300target == "LOW" and this300value < 5300 * upvalue * 0.75 * 0.9:
-            print(["沪深300已到达停止定投限制 请确认后【开启】定投", ])
+            print(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "hs300", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now500target == "LOW" and this500value < 11500 * upvalue * 0.65 * 0.9:
-            print(["中证500已到达停止定投限制 请确认后【开启】定投", ])
+            print(["中证500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "zz500", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
     else:
         if now300target == "TOP" and this300value > 5300 * upvalue * 0.75 * 0.9:
-            sendMsg(["沪深300已到达停止定投限制 请确认后【取消】定投", ])
+            sendMsg(["沪深300已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
             config.set("RegularInvestment", "hs300", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now500target == "TOP" and this500value > 11500 * upvalue * 0.65 * 0.9:
-            sendMsg(["中证500已到达停止定投限制 请确认后【取消】定投", ])
+            sendMsg(["中证500已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
             config.set("RegularInvestment", "zz500", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now300target == "LOW" and this300value < 5300 * upvalue * 0.7 * 0.9:
-            sendMsg(["沪深300已到达开始定投限制 请确认后【开启】定投", ])
+            sendMsg(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "hs300", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now500target == "LOW" and this500value < 11500 * upvalue * 0.6 * 0.9:
-            sendMsg(["中证500已到达开始定投限制 请确认后【开启】定投", ])
+            sendMsg(["中证500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "zz500", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
@@ -278,7 +287,7 @@ if __name__ == '__main__':
     if DEBUG:
         gettargetimg()
     if not DEBUG:
-        if int(dateProperty["week_1"]) % 2 == 0:
+        if True:#int(dateProperty["week_1"]) % 2 == 0:
             gettargetimg()
             发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
                             singleTitle="{} bond target status".format(today),
