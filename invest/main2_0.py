@@ -215,8 +215,8 @@ def checkRange():
 
     config = configparser.ConfigParser()
     config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
-    now300target = config.get("RegularInvestment", "HS300")
-    now500target = config.get("RegularInvestment", "ZZ500")
+    now300target = config.get("RegularInvestment", "hs300")
+    now500target = config.get("RegularInvestment", "zz500")
     print(now300target)
     print(now500target)
     if DEBUG:
@@ -235,39 +235,39 @@ def checkRange():
         print("now 500 target is {}".format(now500target))
         if now300target == "TOP" and this300value > 5300 * upvalue * 0.75:
             print(["沪深300已到达停止定投限制 请确认后【取消】定投", ])
-            config.set("RegularInvestment", "HS300", "LOW")
+            config.set("RegularInvestment", "hs300", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now500target == "TOP" and this500value > 11500 * upvalue * 0.65:
             print(["中证500已到达停止定投限制 请确认后【取消】定投", ])
-            config.set("RegularInvestment", "ZZ500", "LOW")
+            config.set("RegularInvestment", "zz500", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now300target == "LOW" and this300value < 5300 * upvalue * 0.75 * 0.9:
             print(["沪深300已到达停止定投限制 请确认后【开启】定投", ])
-            config.set("RegularInvestment", "HS300", "TOP")
+            config.set("RegularInvestment", "hs300", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
         if now500target == "LOW" and this500value < 11500 * upvalue * 0.65 * 0.9:
             print(["中证500已到达停止定投限制 请确认后【开启】定投", ])
-            config.set("RegularInvestment", "ZZ500", "TOP")
+            config.set("RegularInvestment", "zz500", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
     else:
         if now300target == "TOP" and this300value > 5300 * upvalue * 0.75 * 0.9:
             sendMsg(["沪深300已到达停止定投限制 请确认后【取消】定投", ])
-            config.set("RegularInvestment", "HS300", "LOW")
+            config.set("RegularInvestment", "hs300", "LOW")
 
         if now500target == "TOP" and this500value > 11500 * upvalue * 0.65 * 0.9:
             sendMsg(["中证500已到达停止定投限制 请确认后【取消】定投", ])
-            config.set("RegularInvestment", "ZZ500", "LOW")
+            config.set("RegularInvestment", "zz500", "LOW")
 
         if now300target == "LOW" and this300value < 5300 * upvalue * 0.7 * 0.9:
             sendMsg(["沪深300已到达开始定投限制 请确认后【开启】定投", ])
-            config.set("RegularInvestment", "HS300", "TOP")
+            config.set("RegularInvestment", "hs300", "TOP")
 
         if now500target == "LOW" and this500value < 11500 * upvalue * 0.6 * 0.9:
             sendMsg(["中证500已到达开始定投限制 请确认后【开启】定投", ])
-            config.set("RegularInvestment", "ZZ500", "TOP")
+            config.set("RegularInvestment", "zz500", "TOP")
 
 
 if __name__ == '__main__':
