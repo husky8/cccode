@@ -176,7 +176,7 @@ def checkIpo():
                 malltype = "深市创业板"
             elif ipo["securitycode"][0] == "0" and SZFLAG:
                 malltype = "深市主板"
-            elif ipo["securitycode"][0:2] == "68" and SHFLAG and False:
+            elif ipo["securitycode"][0:2] == "68" and SHFLAG:
                 malltype = "沪市科创板"
             elif ipo["securitycode"][0:2] == "60" and SHFLAG:
                 malltype = "沪市主板"
@@ -188,7 +188,7 @@ def checkIpo():
                 malltype = "深市创业板"
             elif ipo["securitycode"][0] == "0" and SZFLAG:
                 malltype = "深市主板"
-            elif ipo["securitycode"][0:2] == "68" and SHFLAG and False:
+            elif ipo["securitycode"][0:2] == "68" and SHFLAG:
                 malltype = "沪市科创板"
             elif ipo["securitycode"][0:2] == "60" and SHFLAG:
                 malltype = "沪市主板"
@@ -197,7 +197,7 @@ def checkIpo():
     if applyRes != []:
         applyRes = "、".join(applyRes)
         if DEBUG:
-            # print("今日有【{}】新股申购".format(applyRes))
+            print("今日有【{}】新股申购".format(applyRes))
             pass
         else:
             sendMsg("今日有【{}】新股申购".format(applyRes))
