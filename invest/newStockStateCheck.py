@@ -17,7 +17,6 @@ curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(rootPath)
 
-
 from invest.getRaelValue import getNewStock
 from tools.DT import get_day_property
 from tools.DT import getMarketDayDiff
@@ -31,8 +30,8 @@ ZZLURL = config.get("dingdingUrl", "zzlurl")
 ZHURL = config.get("dingdingUrl", "zhkzz")
 ccphone = config.get("phone", "cc")
 zsqphone = config.get("phone", "zsq")
-zzlphone = config.get("phone", "zzl")
-zhphone = config.get("phone", "zh")
+# zzlphone = config.get("phone", "zzl")
+# zhphone = config.get("phone", "zh")
 
 today = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 # today = "2020-01-10"
@@ -57,12 +56,13 @@ if mac == "ac:de:48:00:11:22":
 
 RETRYTIMES = 0
 HAVEINGLIST = {
-    "110073": {"name": "国投转债", "atList": [zsqphone ]},
+    "110073": {"name": "国投转债", "atList": [zsqphone]},
+    "688519": {"name": "南亚新材", "atList": [ccphone]},
 
 }
 
 
-def sendMsg(msg, apiurl="default", atList="all",isAtAll=True):
+def sendMsg(msg, apiurl="default", atList="all", isAtAll=True):
     """
     :param msgList:
     :return: 解析消息列表 并发送钉钉消息
@@ -102,7 +102,7 @@ def checkBond():
         if bond["BONDCODE"] in HAVEINGLIST.keys() and bond["LISTDATE"] != "-":
             saleDay = datetime.datetime.strptime(bond["LISTDATE"][:10], '%Y-%m-%d').date()
             todayDate = datetime.datetime.strptime(today, '%Y-%m-%d').date()
-            print(today,saleDay)
+            print(today, saleDay)
             if todayDate <= saleDay:
                 saleRes.append({"code": bond["BONDCODE"], "name": bond["SNAME"], "saleDay": saleDay})
 
@@ -112,8 +112,8 @@ def checkBond():
             print("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes))
         else:
             sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), atList=[ccphone, zsqphone])
-            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZZLURL,isAtAll=False)
-            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZHURL,isAtAll=False)
+            # sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZZLURL, isAtAll=False)
+            # sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZHURL, isAtAll=False)
 
     # if searchRes != []:
     #     searchRes = "、".join(searchRes)
@@ -128,8 +128,8 @@ def checkBond():
             print("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes))
         else:
             sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), atList=[ccphone, zsqphone])
-            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZZLURL,isAtAll=False)
-            sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZHURL,isAtAll=False)
+            # sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZZLURL, isAtAll=False)
+            # sendMsg("T-2日有可转债【{}】申购，如申购，请及时查看是否中签，预留预缴款".format(checkRes), apiurl=ZHURL, isAtAll=False)
 
     if saleRes != []:
         for i in saleRes:
@@ -137,15 +137,15 @@ def checkBond():
                 print("你持仓的【{}】，{}上市交易，请注意择机出售 {}".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
                     i["saleDay"]) != today else "已于【今日】", HAVEINGLIST[i["code"]]['atList']))
             else:
-                if ccphone in HAVEINGLIST[i["code"]]['atList'] or zsqphone in HAVEINGLIST[i["code"]]['atList'] :
+                if ccphone in HAVEINGLIST[i["code"]]['atList'] or zsqphone in HAVEINGLIST[i["code"]]['atList']:
                     sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
                         i["saleDay"]) != today else "已于【今日】"), atList=HAVEINGLIST[i["code"]]['atList'])
-                if zzlphone in HAVEINGLIST[i["code"]]['atList']:
-                    sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
-                        i["saleDay"]) != today else "已于【今日】"), apiurl=ZZLURL,atList=[zzlphone])
-                if zhphone in HAVEINGLIST[i["code"]]['atList']:
-                    sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
-                        i["saleDay"]) != today else "已于【今日】"), apiurl=ZHURL,atList=[zhphone])
+                # if zzlphone in HAVEINGLIST[i["code"]]['atList']:
+                #     sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
+                #         i["saleDay"]) != today else "已于【今日】"), apiurl=ZZLURL, atList=[zzlphone])
+                # if zhphone in HAVEINGLIST[i["code"]]['atList']:
+                #     sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
+                #         i["saleDay"]) != today else "已于【今日】"), apiurl=ZHURL, atList=[zhphone])
 
 
 def checkIpo():
@@ -162,7 +162,7 @@ def checkIpo():
         exit(0)
     applyRes = []
     checkRes = []
-
+    saleRes = []
     SZFLAG = False  # 暂时不检测深圳市场的新股
     SHFLAG = True
     for ipo in ipolist:
@@ -194,6 +194,13 @@ def checkIpo():
                 malltype = "沪市主板"
             if malltype != "":
                 checkRes.append(malltype + "的" + ipo["securityshortname"])
+        if ipo["securitycode"] in HAVEINGLIST.keys() and ipo["listingdate"] != "-":
+            saleDay = datetime.datetime.strptime(ipo["listingdate"][:10], '%Y-%m-%d').date()
+            todayDate = datetime.datetime.strptime(today, '%Y-%m-%d').date()
+            print(today, saleDay)
+            if todayDate <= saleDay:
+                saleRes.append({"code": ipo["securitycode"], "name": ipo["securityshortname"], "saleDay": saleDay})
+
     if applyRes != []:
         applyRes = "、".join(applyRes)
         if DEBUG:
@@ -208,6 +215,15 @@ def checkIpo():
             pass
         else:
             sendMsg("T-2日有【{}】新股申购,请及时查看是否中签，预留预缴款".format(checkRes))
+    if saleRes != []:
+        for i in saleRes:
+            if DEBUG:
+                print("你持仓的【{}】，{}上市交易，请注意择机出售 {}".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
+                    i["saleDay"]) != today else "已于【今日】", HAVEINGLIST[i["code"]]['atList']))
+            else:
+                if ccphone in HAVEINGLIST[i["code"]]['atList'] or zsqphone in HAVEINGLIST[i["code"]]['atList']:
+                    sendMsg("你持仓的【{}】，{}上市交易，请注意择机出售".format(i["name"], "将于【{}】".format(i["saleDay"]) if str(
+                        i["saleDay"]) != today else "已于【今日】"), atList=HAVEINGLIST[i["code"]]['atList'])
 
 
 if __name__ == '__main__':
