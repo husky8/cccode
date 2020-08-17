@@ -32,7 +32,7 @@ import pandas as pd
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
 mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
-if mac in ("ac:de:48:00:11:22", "00:e0:4c:71:6b:78"):
+if mac in ("ac:de:48:00:11:22", "00:e0:4c:71:6b:78","a6:83:e7:52:66:d7"):
     DEBUG = True
 
 # DEBUG=True
