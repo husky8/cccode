@@ -35,7 +35,7 @@ mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
 if mac in ("ac:de:48:00:11:22", "00:e0:4c:71:6b:78","a6:83:e7:52:66:d7"):
     DEBUG = True
 
-# DEBUG=True
+# DEBUG=False
 
 today = time.strftime('%Y%m%d', time.localtime(time.time()))
 
@@ -217,6 +217,7 @@ def checkRange():
     config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
     now300target = config.get("RegularInvestment", "hs300")
     now500target = config.get("RegularInvestment", "zz500")
+
     if DEBUG:
         print("-" * 66)
         print("Years Up Value is {:.2f}%".format(100 * upvalue))
@@ -284,14 +285,21 @@ def checkRange():
 
 
 if __name__ == '__main__':
+
     if DEBUG:
         gettargetimg()
     if not DEBUG:
+        config = configparser.ConfigParser()
+        config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
+        now300target = config.get("RegularInvestment", "hs300")
+        now500target = config.get("RegularInvestment", "zz500")
         if True:#int(dateProperty["week_1"]) % 2 == 0:
             gettargetimg()
-            发送消息().发送整体跳转消息(robotUrl, "未出售基金目标达成趋势.", "https://cccloud.xyz/static/bondscatter/{}.png".format(today),
-                            singleTitle="{} bond target status".format(today),
-                            singleURL="https://cccloud.xyz/static/bondscatter/{}.png".format(today))
+            发送消息().发送链接文本消息(robotUrl, "未出售基金目标达成趋势.",
+                            "沪深300检测目标为{}\n中证500检测目标为{}".format(now300target,now500target),
+                            picUrl="https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00744-1952.jpg",
+                            messageUrl="https://cccloud.xyz/static/bondscatter/{}.png".format(today)
+                            )
             time.sleep(10)
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
     msgList = calculate(datass, HS300REALVALUE)
