@@ -57,7 +57,7 @@ if mac == "ac:de:48:00:11:22":
 RETRYTIMES = 0
 HAVEINGLIST = {
     "110072": {"name": "广汇转债", "atList": [zsqphone]},
-    "688519": {"name": "南亚新材", "atList": [ccphone]},
+    "601702": {"name": "华峰铝业", "atList": [ccphone]},
 }
 
 
