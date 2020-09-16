@@ -162,7 +162,7 @@ def checkIpo():
     applyRes = []
     checkRes = []
     saleRes = []
-    SZFLAG = False  # 暂时不检测深圳市场的新股
+    SZFLAG = True  # 暂时不检测深圳市场的新股
     SHFLAG = True
     for ipo in ipolist:
         print(ipo)

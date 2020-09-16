@@ -84,13 +84,13 @@ class 发送消息():
 
 if __name__ == '__main__':
     # url = 'https://oapi.dingtalk.com/robot/send?access_token=0c57dacf315f6b76a7fa869819820fa108b9eb4111920fb353b2dd22d2d6efd4'
-    url = "https://oapi.dingtalk.com/robot/send?access_token=fa20378970ff8f99c854bf4334e1d46e9a33a78bbde78dbfb8f870a85fc876b6"
+    url = "https://oapi.dingtalk.com/robot/send?access_token=da48f4dbd70f87efbfa3c1cd859d5134644d9a18be851e91a55878c6f4092156"
     # s = 发送消息().发送普通文本消息("测试.", url, isAtAll=True)
-    # s = 发送消息().发送链接文本消息(url, "这回对了",
-    #                     "详情请点击",
-    #                     picUrl="http://img0.imgtn.bdimg.com/it/u=3348813714,2010737230&fm=26&gp=0.jpg",
-    #                     messageUrl="http://172.16.241.28:8000/a/"
-    #                     )
+    s = 发送消息().发送链接文本消息(url, "哈哈当前基金走势图",
+                        "",
+                        picUrl="https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00744-1952.jpg",
+                        messageUrl="https://cccloud.xyz/static/bondscatter/20200817.png"
+                        )
     # s = 发送消息().发送MarkDown消息(url, "@所有人", "详情请点击")
-    s = 发送消息().发送整体跳转消息(url)
+    # s = 发送消息().发送整体跳转消息(url)
     print(s)
