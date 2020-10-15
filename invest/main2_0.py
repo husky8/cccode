@@ -41,8 +41,10 @@ if mac in ("ac:de:48:00:11:22", "00:e0:4c:71:6b:78","a6:83:e7:52:66:d7"):
 today = time.strftime('%Y%m%d', time.localtime(time.time()))
 
 dateProperty = get_day_property(today)
+print(dateProperty)
 if (dateProperty["data"]["workday"] or dateProperty["data"]["weekday"] >= 6) and not DEBUG:
     print("当天不开盘")
+    time.sleep(10)
     exit(0)
 
 configFilePath = os.getcwd() + "/" + "配置.xlsx"
