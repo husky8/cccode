@@ -71,14 +71,14 @@ def get_day_property(date=""):
             r_lunar = "闰{}月{}".format(config.YMC[day.Lmc], config.RMC[day.Ldi])
         weekday = datetime.datetime(y, m, d).weekday()
         if date in config.WORK_DAY:
-            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday,"workday": True, "lunar": r_lunar}}
+            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday+1,"workday": True, "lunar": r_lunar}}
         if date in config.FREE_DAY:
-            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday,"workday": False, "lunar": r_lunar}}
+            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday+1,"workday": False, "lunar": r_lunar}}
 
         if 0 <= weekday <= 4:
-            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday,"workday": True, "lunar": r_lunar}}
+            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday+1,"workday": True, "lunar": r_lunar}}
         else:
-            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday,"workday": False, "lunar": r_lunar}}
+            return {"error_code": "", "error_msg": "", "data": {"Solar": date, "weekday":weekday+1,"workday": False, "lunar": r_lunar}}
     except ValueError:
         return {"error_code": "1", "error_msg": traceback.format_exc().split("\n")[-2], "data": ""}
 
@@ -120,5 +120,7 @@ if __name__ == '__main__':
     # logger.info(get_day_property())
     # get_git_history()
     # logger.info(get_stream("6112012771547294013460069da3589848fc84d5f2f1aa6c49284b25"))
-    print(getMarketDayDiff("20190617",diff = -5))
+    # print(getMarketDayDiff("20190617",diff = -5))
+    a = get_day_property("20201015")
+    print(a)
     pass
