@@ -154,7 +154,7 @@ def getchartdatas(datass, realValue, mark=""):
 
 def gettargetimg():
     imgpath = "log/{}.png".format(
-        today) if DEBUG else r"C:\Users\Administrator\cccloud\static\bondscatter\{}.png".format(
+        today) if DEBUG else r"C:\cccloud\static\bondscatter\{}.png".format(
         today)
 
     HS300chartdatas = getchartdatas(GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"),
