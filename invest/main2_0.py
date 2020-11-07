@@ -299,7 +299,7 @@ if __name__ == '__main__':
             发送消息().发送链接文本消息(robotUrl, "未出售基金目标达成趋势.",
                             "沪深300检测目标为{}\n中证500检测目标为{}".format(now300target,now500target),
                             picUrl="https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00744-1952.jpg",
-                            messageUrl="https://cccloud.xyz/static/bondscatter/{}.png".format(today)
+                            messageUrl="https://81.70.153.8/static/bondscatter/{}.png".format(today)
                             )
             time.sleep(10)
     datass = (GetInfoFromExcel().getInfoFromExcel(configFilePath, sheetName="hs300"))
