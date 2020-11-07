@@ -42,9 +42,9 @@ todayDiff_2 = todayDiff_2[:4] + "-" + todayDiff_2[4:6] + "-" + todayDiff_2[6:]
 
 dateProperty = get_day_property(today)
 # print(dateProperty)
-if not dateProperty["data"]["workday"] or 5 <= int(dateProperty["data"]["weekday"]):
-    print("当天不开盘")
-    exit(0)
+# if not dateProperty["data"]["workday"] or 5 <= int(dateProperty["data"]["weekday"]):
+#     print("当天不开盘")
+#     exit(0)
 
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
