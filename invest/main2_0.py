@@ -230,7 +230,7 @@ def checkRange():
             print("Higt 300 Value is {}".format(round(5300 * upvalue * 0.75, 2)))
             print("Higt 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75, 2))))
         elif now300target == "LOW":
-            print("Low 300 Value is {}".format(round(5300 * upvalue * 0.75 * 0.9, 2)))
+            print("Low 300 Value is {}".format(round(5300 * upvalue * 0.75 * 0.85, 2)))
             print("Low 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75 * 0.9, 2))))
         print("-" * 66)
         print("highest  ZZ500 is 11000")
@@ -240,7 +240,7 @@ def checkRange():
             print("Higt 500 Value is {}".format(round(11000 * upvalue * 0.65, 2)))
             print("Higt 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65, 2))))
         elif now500target == "LOW":
-            print("Low 500 Value is {}".format(round(11000 * upvalue * 0.65 * 0 / 9, 2)))
+            print("Low 500 Value is {}".format(round(11000 * upvalue * 0.65 * 0.85, 2)))
             print("Low 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65 * 0.9, 2))))
 
 
@@ -254,12 +254,12 @@ def checkRange():
             config.set("RegularInvestment", "zz500", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
-        if now300target == "LOW" and this300value < 5300 * upvalue * 0.75 * 0.9:
+        if now300target == "LOW" and this300value < 5300 * upvalue * 0.75 * 0.85:
             print(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "hs300", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
-        if now500target == "LOW" and this500value < 11500 * upvalue * 0.65 * 0.9:
+        if now500target == "LOW" and this500value < 11500 * upvalue * 0.65 * 0.85:
             print(["中证500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "zz500", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
@@ -274,12 +274,12 @@ def checkRange():
             config.set("RegularInvestment", "zz500", "LOW")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
-        if now300target == "LOW" and this300value < 5300 * upvalue * 0.7 * 0.9:
+        if now300target == "LOW" and this300value < 5300 * upvalue * 0.7 * 0.85:
             sendMsg(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "hs300", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
 
-        if now500target == "LOW" and this500value < 11500 * upvalue * 0.6 * 0.9:
+        if now500target == "LOW" and this500value < 11500 * upvalue * 0.6 * 0.85:
             sendMsg(["中证500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
             config.set("RegularInvestment", "zz500", "TOP")
             config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
