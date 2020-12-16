@@ -60,5 +60,5 @@ def makePicture(name=None,string=None,fontSize='Auto',fontColor=None,picSize=Non
     image.show()
     image.save(name)
 # print(isColor((255,255,255)))
-makePicture(picSize=(800,800),fontSize='auto',fontColor=(0,0,255),string='新'
-            ,name='/Users/smzdm/Desktop/新.png')
+makePicture(picSize=(750 , 260),fontSize='auto',fontColor=(0,0,255),string='新用户通栏'
+            ,name='/Users/smzdm/Desktop/新用户通栏.png')
