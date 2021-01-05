@@ -48,6 +48,8 @@ if not dateProperty["data"]["workday"] or dateProperty["data"]["weekday"] >= 6:
 configFilePath = os.getcwd() + "/" + "配置.xlsx"
 HS300REALVALUE = getTHHS300A()
 ZZ500REALVALUE = getTHZZ500C()
+# HS300REALVALUE = 1
+# ZZ500REALVALUE = 0.5
 print(HS300REALVALUE)
 print(ZZ500REALVALUE)
 # ModifyExcel().modifyExcel("配置.xlsx", "F1", HS300REALVALUE, "hs300")
@@ -102,9 +104,6 @@ def calculate(datass, realValue):
 
             msgList.append(msg)
             continue
-    if saleCount != 0:
-        msgList.append("合计应出售【{合计出售份数:.2f}】份".format(合计出售份数=saleCount))
-
         # 合并计算
         if datas[statusIndex] == "持有" and realValue < datas[buyPriceindex] * (1 - 1.5 * datas[targetIndex]):
             # if True:
@@ -116,6 +115,8 @@ def calculate(datass, realValue):
             )
             # print(msg)
             msgList.append(msg)
+    if saleCount != 0:
+        msgList.append("合计应出售【{合计出售份数:.2f}】份".format(合计出售份数=saleCount))
     return msgList
 
 
