@@ -45,7 +45,7 @@ def getMarketDayDiff(startDate = "",diff = -1):
         startDate = datetime.datetime(int(startDate[0:4]),int(startDate[4:6]),int(startDate[6:8]))
     for i in range(1, math.ceil(1.4*abs(diff)+10)):
         s_day = get_day_property(str(startDate - datetime.timedelta(days=i if diff<0 else -i)))
-        if s_day["data"]["workday"] is True and 0<= s_day["data"]["weekday"] <=4:
+        if s_day["data"]["workday"] is True and 0<= s_day["data"]["weekday"] <=5:
             diff = diff+1 if diff<0 else diff-1
             if diff==0:
                 return s_day["data"]["Solar"][:8]
@@ -121,6 +121,6 @@ if __name__ == '__main__':
     # get_git_history()
     # logger.info(get_stream("6112012771547294013460069da3589848fc84d5f2f1aa6c49284b25"))
     # print(getMarketDayDiff("20190617",diff = -5))
-    a = get_day_property("20201015")
+    a = getMarketDayDiff("2021-01-26",-2)
     print(a)
     pass
