@@ -33,7 +33,7 @@ from tools.DT import get_day_property
 DEBUG = False
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
 mac = ":".join([mac[e:e + 2] for e in range(0, 11, 2)])
-if mac in ("ac:de:48:00:11:22", "00:e0:4c:71:6b:78","a6:83:e7:52:66:d7"):
+if mac in ("ac:de:48:00:11:22", "00:e0:4c:71:6b:78", "a6:83:e7:52:66:d7"):
     DEBUG = True
 
 # DEBUG=False
@@ -48,10 +48,6 @@ if not dateProperty["data"]["workday"] or dateProperty["data"]["weekday"] >= 6:
 configFilePath = os.getcwd() + "/" + "配置.xlsx"
 HS300REALVALUE = getTHHS300A()
 ZZ500REALVALUE = getTHZZ500C()
-# HS300REALVALUE = 1
-# ZZ500REALVALUE = 0.5
-print(HS300REALVALUE)
-print(ZZ500REALVALUE)
 # ModifyExcel().modifyExcel("配置.xlsx", "F1", HS300REALVALUE, "hs300")
 # ModifyExcel().modifyExcel("配置.xlsx", "F1", ZZ500REALVALUE, "zz500")
 robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=f4d80d72e703ef2074e2e5eeada5fd930d14ba7fffb4b423c795f21928b8d6a0"
@@ -207,86 +203,112 @@ def sendMsg(msgList):
     发送消息().发送普通文本消息(finMsg, apiurl=robotUrl, atList=f.readlines())
 
 
+def sendMsgOrPrint(msgList):
+    if DEBUG:
+        print(msgList)
+    else:
+        sendMsg(msgList)
+
+
 def checkRange():
     from invest.getRaelValue import getIndex
-    cur_day = datetime.datetime(2015, 6, 10)
-    next_day = datetime.datetime.today()
-    upvalue = 1.05 ** ((next_day - cur_day).days / 365)
-    this300value = float(getIndex(399300)["details"][-1].split(",")[1])
-    this500value = float(getIndex(399905)["details"][-1].split(",")[1])
-
+    cur_day = datetime.datetime.today()
     config = configparser.ConfigParser()
     config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
+
+    # 历史最高日期,历史最高指数,最近最高日期,最近最高指数,时间加权，人工微调加权，检测方向
+    hs300HistoryTopDate = datetime.datetime.strptime(config.get("RegularInvestment", "hs300HistoryTopDate"), '%Y-%m-%d')
+    zz500HistoryTopDate = datetime.datetime.strptime(config.get("RegularInvestment", "zz500HistoryTopDate"), '%Y-%m-%d')
+    hs300HistoryTopIndex = float(config.get("RegularInvestment", "hs300HistoryTopIndex"))
+    zz500HistoryTopIndex = float(config.get("RegularInvestment", "zz500HistoryTopIndex"))
+    hs300LastTopDate = datetime.datetime.strptime(config.get("RegularInvestment", "hs300LastTopDate"), '%Y-%m-%d')
+    zz500LastTopDate = datetime.datetime.strptime(config.get("RegularInvestment", "zz500LastTopDate"), '%Y-%m-%d')
+    hs300LastTopIndex = float(config.get("RegularInvestment", "hs300LastTopIndex"))
+    zz500LastTopIndex = float(config.get("RegularInvestment", "zz500LastTopIndex"))
+    hs300HistoryUpValue = round(1.05 ** ((cur_day - hs300HistoryTopDate).days / 365), 4)
+    zz500HistoryUpValue = round(1.05 ** ((cur_day - zz500HistoryTopDate).days / 365), 4)
+    hs300LastUpValue = round(1.05 ** ((cur_day - hs300LastTopDate).days / 365), 4)
+    zz500LastUpValue = round(1.05 ** ((cur_day - zz500LastTopDate).days / 365), 4)
+
+    hs300Adjust = float(config.get("RegularInvestment", "hs300Adjust"))
+    zz500Adjust = float(config.get("RegularInvestment", "zz500Adjust"))
     now300target = config.get("RegularInvestment", "hs300")
     now500target = config.get("RegularInvestment", "zz500")
 
+    now300value = float(getIndex(399300)["details"][-1].split(",")[1])
+    now500value = float(getIndex(399905)["details"][-1].split(",")[1])
+
+    hs300StopPoint = round(hs300HistoryTopIndex * hs300HistoryUpValue * hs300Adjust * 0.75, 2)  # 微调后,到达历史最高 75% 停止
+    zz500StopPoint = round(zz500HistoryTopIndex * zz500HistoryUpValue * zz500Adjust * 0.75, 2)
+    hs300StartPoint = round(hs300LastTopIndex * hs300LastUpValue * 0.8, 2)  # 到达最近最高 80% 开始
+    zz500StartPoint = round(zz500LastTopIndex * zz500LastUpValue * 0.8, 2)
+
     if DEBUG:
-        print("-" * 66)
-        print("Years Up Value is {:.2f}%".format(100 * upvalue))
-        print("-"*66)
-        print("highest  HS300 is 5300")
-        print("This 300 Value is {}".format(this300value))
-        print("Now 300 target is {}".format(now300target))
-        if now300target == "TOP":
-            print("Higt 300 Value is {}".format(round(5300 * upvalue * 0.75, 2)))
-            print("Higt 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75, 2))))
-        elif now300target == "LOW":
-            print("Low 300 Value is {}".format(round(5300 * upvalue * 0.75 * 0.85, 2)))
-            print("Low 300 Range is {:.2f}%".format(100 * (1 - this300value / round(5300 * upvalue * 0.75 * 0.9, 2))))
-        print("-" * 66)
-        print("highest  ZZ500 is 11000")
-        print("This 500 Value is {}".format(this500value))
-        print("Now 500 target is {}".format(now500target))
-        if now500target == "TOP":
-            print("Higt 500 Value is {}".format(round(11000 * upvalue * 0.65, 2)))
-            print("Higt 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65, 2))))
-        elif now500target == "LOW":
-            print("Low 500 Value is {}".format(round(11000 * upvalue * 0.65 * 0.85, 2)))
-            print("Low 500 Range is {:.2f}%".format(100 * (1 - this500value / round(11000 * upvalue * 0.65 * 0.9, 2))))
+        print("现在300方向", now300target)
+        print("现在500方向", now500target)
+        print("现在300", now300value)
+        print("现在500", now500value)
+        print("300开始", hs300StartPoint)
+        print("300结束", hs300StopPoint)
+        print("500开始", zz500StartPoint)
+        print("500结束", zz500StopPoint)
 
+    # hs300
+    # 触发关闭 并 更新近高
+    if now300target == "TOP" and now300value > hs300StopPoint:
+        config.set("RegularInvestment", "hs300", "LOW")
+        config.set("RegularInvestment", "hs300LastTopIndex", str(now300value))
+        config.set("RegularInvestment", "hs300LastTopDate", str(datetime.date.today()))
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深300已到达【关闭】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
+    # 触发开启
+    if now300target == "LOW" and now300value < hs300StartPoint:
+        config.set("RegularInvestment", "hs300", "TOP")
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝你好运喽~", ])
+    # 更新进高
+    if now300target == "LOW" and now300value > hs300LastTopIndex:
+        config.set("RegularInvestment", "hs300LastTopIndex", str(now300value))
+        config.set("RegularInvestment", "hs300LastTopDate", str(datetime.date.today()))
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深300已超过最近新高 现在 {} 近期最高 {}".format(now300value, hs300LastTopIndex), ])
+    # 更新最高
+    if now300value > hs300HistoryTopIndex:
+        config.set("RegularInvestment", "hs300HistoryTopIndex", str(now300value))
+        config.set("RegularInvestment", "hs300HistoryTopDate", str(datetime.date.today()))
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深300已超过历史新高 现在 {} 历史最高 {}".format(now300value, hs300HistoryTopIndex), ])
 
-        if now300target == "TOP" and this300value > 5300 * upvalue * 0.75:
-            print(["沪深300已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
-            config.set("RegularInvestment", "hs300", "LOW")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
-
-        if now500target == "TOP" and this500value > 11500 * upvalue * 0.65:
-            print(["中证500已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
-            config.set("RegularInvestment", "zz500", "LOW")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
-
-        if now300target == "LOW" and this300value < 5300 * upvalue * 0.75 * 0.85:
-            print(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
-            config.set("RegularInvestment", "hs300", "TOP")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
-
-        if now500target == "LOW" and this500value < 11500 * upvalue * 0.65 * 0.85:
-            print(["中证500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
-            config.set("RegularInvestment", "zz500", "TOP")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
-    else:
-        if now300target == "TOP" and this300value > 5300 * upvalue * 0.75 :
-            sendMsg(["沪深300已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
-            config.set("RegularInvestment", "hs300", "LOW")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
-
-        if now500target == "TOP" and this500value > 11500 * upvalue * 0.65 :
-            sendMsg(["中证500已到达【停止】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
-            config.set("RegularInvestment", "zz500", "LOW")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
-
-        if now300target == "LOW" and this300value < 5300 * upvalue * 0.7 * 0.85:
-            sendMsg(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
-            config.set("RegularInvestment", "hs300", "TOP")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
-
-        if now500target == "LOW" and this500value < 11500 * upvalue * 0.6 * 0.85:
-            sendMsg(["中证500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝好运喽~", ])
-            config.set("RegularInvestment", "zz500", "TOP")
-            config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+    # zz500
+    # 触发关闭 并 更新近高
+    if now500target == "TOP" and now500value > zz500StopPoint:
+        config.set("RegularInvestment", "zz500", "LOW")
+        config.set("RegularInvestment", "zz500LastTopIndex", str(now500value))
+        config.set("RegularInvestment", "zz500LastTopDate", str(datetime.date.today()))
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深500已到达【关闭】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
+    # 触发开启
+    if now500target == "LOW" and now500value < zz500StartPoint:
+        config.set("RegularInvestment", "zz500", "TOP")
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝你好运喽~", ])
+    # 更新进高
+    if now500target == "LOW" and now500value > zz500LastTopIndex:
+        config.set("RegularInvestment", "zz500LastTopIndex", str(now500value))
+        config.set("RegularInvestment", "zz500LastTopDate", str(datetime.date.today()))
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深500已超过最近新高 现在 {} 近期最高 {}".format(now500value, zz500LastTopIndex), ])
+    # 更新最高
+    if now500value > zz500HistoryTopIndex:
+        config.set("RegularInvestment", "zz500HistoryTopIndex", str(now500value))
+        config.set("RegularInvestment", "zz500HistoryTopDate", str(datetime.date.today()))
+        config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
+        sendMsgOrPrint(["沪深500已超过历史新高 现在 {} 历史最高 {}".format(now500value, zz500HistoryTopIndex), ])
 
 
 if __name__ == '__main__':
+    checkRange()
+    exit(0)
 
     if DEBUG:
         gettargetimg()
@@ -295,10 +317,10 @@ if __name__ == '__main__':
         config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
         now300target = config.get("RegularInvestment", "hs300")
         now500target = config.get("RegularInvestment", "zz500")
-        if True:#int(dateProperty["week_1"]) % 2 == 0:
+        if True:  # int(dateProperty["week_1"]) % 2 == 0:
             gettargetimg()
             发送消息().发送链接文本消息(robotUrl, "未出售基金目标达成趋势.",
-                            "沪深300检测目标为{}\n中证500检测目标为{}".format(now300target,now500target),
+                            "沪深300检测目标为{}\n中证500检测目标为{}".format(now300target, now500target),
                             picUrl="https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00744-1952.jpg",
                             messageUrl="https://81.70.153.8/static/bondscatter/{}.png".format(today)
                             )
