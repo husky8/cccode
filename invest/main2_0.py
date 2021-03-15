@@ -264,7 +264,7 @@ def checkRange():
         config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
         sendMsgOrPrint(["沪深300已到达【关闭】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
     # 触发开启
-    if now300target == "LOW" and now300value < hs300StartPoint:
+    if now300target == "LOW" and now300value < hs300StartPoint and now300value < hs300StopPoint:
         config.set("RegularInvestment", "hs300", "TOP")
         config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
         sendMsgOrPrint(["沪深300已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝你好运喽~", ])
@@ -290,7 +290,7 @@ def checkRange():
         config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
         sendMsgOrPrint(["沪深500已到达【关闭】定投限制 请确认后【修改定投计划为每笔10元】见好就收鸭~", ])
     # 触发开启
-    if now500target == "LOW" and now500value < zz500StartPoint:
+    if now500target == "LOW" and now500value < zz500StartPoint and now500value <zz500StopPoint:
         config.set("RegularInvestment", "zz500", "TOP")
         config.write(open(os.path.dirname(os.path.abspath(__file__)) + "/config.ini", "r+"))
         sendMsgOrPrint(["沪深500已到达【开启】定投限制 请确认后【修改定投计划为每笔150元】祝你好运喽~", ])
