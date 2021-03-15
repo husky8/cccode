@@ -48,6 +48,8 @@ if not dateProperty["data"]["workday"] or dateProperty["data"]["weekday"] >= 6:
 configFilePath = os.getcwd() + "/" + "配置.xlsx"
 HS300REALVALUE = getTHHS300A()
 ZZ500REALVALUE = getTHZZ500C()
+print(HS300REALVALUE)
+print(ZZ500REALVALUE)
 # ModifyExcel().modifyExcel("配置.xlsx", "F1", HS300REALVALUE, "hs300")
 # ModifyExcel().modifyExcel("配置.xlsx", "F1", ZZ500REALVALUE, "zz500")
 robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=f4d80d72e703ef2074e2e5eeada5fd930d14ba7fffb4b423c795f21928b8d6a0"
@@ -307,8 +309,6 @@ def checkRange():
 
 
 if __name__ == '__main__':
-    checkRange()
-    exit(0)
 
     if DEBUG:
         gettargetimg()
