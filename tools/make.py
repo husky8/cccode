@@ -57,8 +57,9 @@ def makePicture(name=None,string=None,fontSize='Auto',fontColor=None,picSize=Non
 
 
     # 保存到硬盘，名为test.png格式为png的图片
-    image.show()
+    # image.show()
     image.save(name)
 # print(isColor((255,255,255)))
-makePicture(picSize=(750 , 260),fontSize='auto',fontColor=(0,0,255),string='新用户通栏'
-            ,name='/Users/smzdm/Desktop/新用户通栏.png')
+if __name__ == '__main__':
+    makePicture(picSize=(210,210),fontSize='auto',bg=(222,222,0),fontColor=(222,0,0),string='注意\n事项'
+                ,name='/Users/smzdm/Desktop/pic.png')

@@ -42,7 +42,7 @@ todayDiff_2 = todayDiff_2[:4] + "-" + todayDiff_2[4:6] + "-" + todayDiff_2[6:]
 
 dateProperty = get_day_property(today)
 # print(dateProperty)
-if not dateProperty["data"]["workday"] or 5 <= int(dateProperty["data"]["weekday"]):
+if not dateProperty["data"]["workday"] or 5 < int(dateProperty["data"]["weekday"]):
     print("当天不开盘")
     exit(0)
 
@@ -57,6 +57,9 @@ if mac == "ac:de:48:00:11:22":
 RETRYTIMES = 0
 HAVEINGLIST = {
     "127029": {"name": "中钢转债", "atList": [ccphone]},
+    "110079": {"name": "杭银转债", "atList": [ccphone, zsqphone]},
+    "123107": {"name": "温氏转债", "atList": [zsqphone]},
+    "123111": {"name": "东财转3", "atList": [zsqphone]},
     "688619": {"name": "罗普特", "atList": [ccphone]},
 }
 
