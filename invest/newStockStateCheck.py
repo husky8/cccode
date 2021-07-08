@@ -27,6 +27,7 @@ config = configparser.ConfigParser()
 config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.ini")
 robotUrl = config.get("dingdingUrl", "hjbf")
 ZZLURL = config.get("dingdingUrl", "zzlurl")
+KYXURL = config.get("dingdingUrl", "kyxurl")
 ZHURL = config.get("dingdingUrl", "zhkzz")
 ccphone = config.get("phone", "cc")
 zsqphone = config.get("phone", "zsq")
@@ -114,7 +115,7 @@ def checkBond():
             print("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes))
         else:
             sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), atList=[ccphone, zsqphone])
-            # sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZZLURL, isAtAll=False)
+            sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=KYXURL, isAtAll=False)
             # sendMsg("今日有可转债【{}】申购，请查看溢价率及评估市场行情后申购".format(applyRes), apiurl=ZHURL, isAtAll=False)
 
     # if searchRes != []:
